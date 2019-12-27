@@ -1,9 +1,11 @@
 <resources>
-    <string name="app_name">Comfort Delgro</string>
-    <string name="AppName">Comfort Delgro</string>
-    <string name="message_version_outdated">There is a new version for Comfort Delgro System. Please update on Google Playstore. Comfort Delgro System will is now closing.</string>
+    <string name="app_name">Maple Tree</string>
+    <string name="AppName">Maple Tree</string>
+    <string name="message_version_outdated">
+        There is a new version for Maple Tree System.
+        Please update on Google Playstore.
+        Maple Tree system is now closing.</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>
