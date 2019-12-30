@@ -20,9 +20,13 @@ import com.info121.mapletree.AbstractActivity;
 import com.info121.mapletree.App;
 import com.info121.mapletree.R;
 import com.info121.mapletree.api.RestClient;
+import com.info121.mapletree.models.ObjectRes;
 import com.info121.mapletree.services.SmartLocationService;
 import com.info121.mapletree.utils.PrefDB;
 import com.info121.mapletree.utils.Util;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,11 +37,16 @@ import retrofit2.Response;
 
 public class LoginActivity extends AbstractActivity {
 
+    String TAG = this.getClass().getSimpleName();
+
     Context mContext = LoginActivity.this;
     PrefDB prefDB;
 
     @BindView(R.id.user_name)
     EditText mUserName;
+
+    @BindView(R.id.password)
+    EditText mPassword;
 
     @BindView(R.id.remember_me)
     CheckBox mRemember;
@@ -50,6 +59,8 @@ public class LoginActivity extends AbstractActivity {
 
     @BindView(R.id.ui_version)
     TextView mUiVersion;
+
+    String todayDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,56 +87,64 @@ public class LoginActivity extends AbstractActivity {
     @OnClick(R.id.login)
     public void loginOnClick(){
         mProgressBar.setVisibility(View.VISIBLE);
-        callValidateDriver();
+        callValidateUser();
     }
 
-    private void callValidateDriver(){
-        Call<ObjectRes> call = RestClient.COACH().getApiService().ValidateDriver(mUserName.getText().toString().trim());
+    private void callValidateUser(){
+        Calendar c = Calendar.getInstance();
+
+        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
+        todayDate = df.format(c.getTime());
+
+
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().ValidateUser(
+                mUserName.getText().toString().trim(),
+                mPassword.getText().toString().trim(),
+                "info121" + todayDate
+        );
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
             public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+                mProgressBar.setVisibility(View.GONE);
+                if(response.body().getResponsemessage().equalsIgnoreCase("Valid")) {
 
-                if(response.body().getResponsemessage().equalsIgnoreCase("VALID")){
-                    App.userName = mUserName.getText().toString();
-                    App.deviceID = Util.getDeviceID(getApplicationContext());
+                    App.userName = mUserName.getText().toString().trim();
                     App.authToken = response.body().getToken();
-                    App.timerDelay = 1000;
 
-                    callUpdateDevice();
+                    loginSuccessful();
+
                 }else{
-                    mUserName.setError("Wrong user name");
+                    mUserName.setError("Invalid user name or password.");
                     mUserName.requestFocus();
-                    mProgressBar.setVisibility(View.GONE);
                 }
-
             }
 
             @Override
             public void onFailure(Call<ObjectRes> call, Throwable t) {
-                mUserName.setError("Error in connection.");
-                mUserName.requestFocus();
-                mProgressBar.setVisibility(View.GONE);
+
             }
         });
+
+
     }
 
     private void callCheckVersion(){
-        Call<ObjectRes> call = RestClient.COACH().getApiService().CheckVersion(String.valueOf(Util.getVersionCode(mContext)));
-
-        call.enqueue(new Callback<ObjectRes>() {
-            @Override
-            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-                if(response.body().getResponsemessage().equalsIgnoreCase("OUTDATED")) {
-                    showOutdatedDialog();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ObjectRes> call, Throwable t) {
-
-            }
-        });
+//        Call<ObjectRes> call = RestClient.COACH().getApiService().CheckVersion(String.valueOf(Util.getVersionCode(mContext)));
+//
+//        call.enqueue(new Callback<ObjectRes>() {
+//            @Override
+//            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+//                if(response.body().getResponsemessage().equalsIgnoreCase("OUTDATED")) {
+//                    showOutdatedDialog();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ObjectRes> call, Throwable t) {
+//
+//            }
+//        });
     }
 
     private void callUpdateDevice(){
@@ -136,24 +155,7 @@ public class LoginActivity extends AbstractActivity {
         Log.e("====" , "=========================================");
 
 
-        Call<ObjectRes> call = RestClient.COACH().getApiService().UpdateDevice(Util.getDeviceID(getApplicationContext()),
-                App.DEVICE_TYPE,
-                App.FCM_TOKEN);
 
-        call.enqueue(new Callback<ObjectRes>() {
-            @Override
-            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-                // Add to Appication Varialbles
-
-                loginSuccessful();
-            }
-
-            @Override
-            public void onFailure(Call<ObjectRes> call, Throwable t) {
-                Toast.makeText(mContext, "Getting error in firebase token request.", Toast.LENGTH_SHORT).show();
-                mProgressBar.setVisibility(View.GONE);
-            }
-        });
     }
 
     private void loginSuccessful(){
@@ -163,20 +165,23 @@ public class LoginActivity extends AbstractActivity {
         // instantiate wiht new Token
         //RestClient.Dismiss();
 
+
         prefDB.putString(App.CONST_USER_NAME, App.userName);
         prefDB.putString(App.CONST_DEVICE_ID, App.deviceID);
         prefDB.putLong(App.CONST_TIMER_DELAY, App.timerDelay);
 
         // location
-        startLocationService();
+        //startLocationService();
 
         if (mRemember.isChecked())
             prefDB.putBoolean(App.CONST_REMEMBER_ME, true);
         else
             prefDB.putBoolean(App.CONST_REMEMBER_ME, false);
 
+        Log.e(TAG, "Login Successful");
+
         // login successful
-        startActivity(new Intent(LoginActivity.this, JobOverviewActivity.class));
+        startActivity(new Intent(LoginActivity.this, RoundsActivity.class));
     }
 
     private void startLocationService() {

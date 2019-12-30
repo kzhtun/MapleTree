@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:background="@drawable/rounded_layout_green"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    >
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:src="@mipmap/ic_clock"/>
+
+        <TextView android:id="@+id/round_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text = "Late Open 1st Round"
+            android:layout_marginLeft="16dp"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            fontPath="fonts/Lato-Bold.ttf"
+            android:textSize="16dp"
+            android:letterSpacing="0.1" />
+
+</LinearLayout>
+
+</LinearLayout>

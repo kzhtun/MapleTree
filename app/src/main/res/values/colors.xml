@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00355C</color>
-    <color name="colorPrimaryDark">#00243D</color>
-    <color name="colorAccent">#ef631a</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#EEEEEE</color>
+    <color name="colorAccent">#FF9800</color>
 
-    <color name="divider">#A5A5A5</color>
+    <color name="divider">#D7F0FF</color>
     <color name="green">#3C8D00</color>
     <color name="dark_green">#3d8c00</color>
     <color name="cyan">#008cd2</color>
@@ -28,27 +28,35 @@
     <color name="accept">#0DAA00</color>
     <color name="reject">#FF1400</color>
 
-    <color name="layout">#EEEEEE</color>
-    <color name="layout_stroke">#C9DBEB</color>
+    <color name="layout_green">#25A200</color>
+    <color name="layout_green_stroke">#2CBE00</color>
+
+    <color name="layout_grey">#888888</color>
+    <color name="layout_grey_stroke">#777777</color>
+
+    <color name="layout">#FFFFFF</color>
+    <color name="layout_stroke">#D7F0FF</color>
     <color name="layout_light">#C9DBEB</color>
 
     <color name="edit_text_color">#262A33</color>
-    <color name="edit_text_background">#D7E4EE</color>
+    <color name="edit_text_background">#EFEFEF</color>
 
 
-    <color name="background">#A4BACF</color>
+    <color name="background">#EDF8FF</color>
 
 
-    <color name="default_button">#00ACFF</color>
-    <color name="default_button_stroke">#00ACFF</color>
+    <color name="default_button">#F5A01A</color>
+    <color name="default_button_stroke">#FFB238</color>
 
     <color name="normal_button">#004881</color>
     <color name="normal_button_stroke">#004881</color>
 
+    <color name="navigation_text">#004881</color>
 
-    <color name="cell_text">#525252</color>
-    <color name="cell_label">#0065B6</color>
-    <color name="cell_label_dark">#004881</color>
+    <color name="title_text">#111111</color>
+    <color name="cell_text">#3F3F3F</color>
+    <color name="cell_label">#3F3F3F</color>
+    <color name="cell_label_dark">#292929</color>
 
 
 </resources>

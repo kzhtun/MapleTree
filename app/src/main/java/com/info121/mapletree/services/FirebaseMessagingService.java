@@ -14,6 +14,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
 import com.info121.mapletree.App;
 import com.info121.mapletree.R;
+import com.info121.mapletree.activities.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -31,7 +32,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         OLD_CH  = App.getOldChannelId();
         NEW_CH = App.getNewChannelId();
 
-        Intent intent = new Intent(this, JobOverviewActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);
 
@@ -89,9 +90,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                 );
             }else{
                 showNotification(remoteMessage.getData().get("title"), remoteMessage.getData().get("message"));
-                EventBus.getDefault().post(new Action(remoteMessage.getData().get("action"),
-                        remoteMessage.getData().get("jobno")
-                        ));
+//                EventBus.getDefault().post(new Action(remoteMessage.getData().get("action"),
+//                        remoteMessage.getData().get("jobno")
+//                        ));
 
                 EventBus.getDefault().postSticky("UPDATE_JOB_COUNT");
             }
@@ -106,7 +107,7 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         OLD_CH  = App.getOldChannelIdP();
         NEW_CH = App.getNewChannelIdP();
 
-        Intent intent = new Intent(this, DialogActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
@@ -158,15 +159,15 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
         Bundle bundle = new Bundle();
 
-        bundle.putString(ShowDialogService.JOB_NO, jobNo);
-        bundle.putString(ShowDialogService.NAME, name);
-        bundle.putString(ShowDialogService.PHONE, phone);
-        bundle.putString(ShowDialogService.MESSAGE, displayMessage);
-
-        intent.putExtras(bundle);
-        // startService(intent);
-
-        startActivity(intent);
+//        bundle.putString(ShowDialogService.JOB_NO, jobNo);
+//        bundle.putString(ShowDialogService.NAME, name);
+//        bundle.putString(ShowDialogService.PHONE, phone);
+//        bundle.putString(ShowDialogService.MESSAGE, displayMessage);
+//
+//        intent.putExtras(bundle);
+//        // startService(intent);
+//
+//        startActivity(intent);
     }
 
     @Override

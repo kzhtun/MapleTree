@@ -23,14 +23,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestClient {
-   // private static final String MAI_URL = "http://8mapi.mywebcheck.in/AIRLINEAPI/AWS.svc/";
 
     private static String AuthToken = "";
     private static RestClient instance = null;
     private static int callCount = 10;
     private APIService service;
-
-
 
     private RestClient() {
 
@@ -73,7 +70,7 @@ public class RestClient {
         return service;
     }
 
-    public static RestClient COACH() {
+    public static RestClient MAPLE() {
         if (instance == null) {
             instance = new RestClient();
         }

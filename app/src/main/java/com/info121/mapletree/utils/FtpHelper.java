@@ -154,14 +154,7 @@ public class FtpHelper {
                 public void run() {
                     prg.dismiss();
 
-                    if (mType.equalsIgnoreCase("SHOW"))
-                        callSaveShowPhoto(context, mJobNo, mFileName);
 
-                    if (mType.equalsIgnoreCase("NOSHOW"))
-                        callSaveNoShowPhoto(context, mJobNo, mFileName);
-
-                    if (mType.equalsIgnoreCase("SIGNATURE"))
-                        callSaveSignature(context, mJobNo, mFileName);
 
 
                 }
@@ -226,64 +219,6 @@ public class FtpHelper {
     }
 
 
-    private static void callSaveShowPhoto(final Context context, String jobNo, String fileName) {
-        Call<JobRes> call = RestClient.COACH().getApiService().SaveShowPic(
-                jobNo,
-                fileName
-        );
 
-
-        call.enqueue(new Callback<JobRes>() {
-            @Override
-            public void onResponse(Call<JobRes> call, Response<JobRes> response) {
-                Toast.makeText(context, "Show save successful", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<JobRes> call, Throwable t) {
-                Toast.makeText(context, "Show save failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private static void callSaveNoShowPhoto(final Context context, String jobNo, String fileName) {
-        Call<JobRes> call = RestClient.COACH().getApiService().SaveNoShowPic(
-                jobNo,
-                fileName
-        );
-
-
-        call.enqueue(new Callback<JobRes>() {
-            @Override
-            public void onResponse(Call<JobRes> call, Response<JobRes> response) {
-                Toast.makeText(context, "No show save successful", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<JobRes> call, Throwable t) {
-                Toast.makeText(context, "No show save failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private static void callSaveSignature(final Context context, String jobNo, String fileName) {
-        Call<JobRes> call = RestClient.COACH().getApiService().SaveSignature(
-                jobNo,
-                fileName
-        );
-
-
-        call.enqueue(new Callback<JobRes>() {
-            @Override
-            public void onResponse(Call<JobRes> call, Response<JobRes> response) {
-                Toast.makeText(context, "Signature save successful", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<JobRes> call, Throwable t) {
-                Toast.makeText(context, "Signature save failed", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
 }

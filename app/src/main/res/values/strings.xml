@@ -1,11 +1,14 @@
 <resources>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
+
+
     <string name="app_name">Maple Tree</string>
     <string name="AppName">Maple Tree</string>
     <string name="message_version_outdated">
         There is a new version for Maple Tree System.
         Please update on Google Playstore.
         Maple Tree system is now closing.</string>
-
 
 
 </resources>

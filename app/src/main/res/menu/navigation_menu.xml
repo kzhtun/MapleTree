@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <group android:id="@+id/group_1" android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/profile"
+            android:checked="false"
+            android:title="Profile" />
+        <item
+            android:id="@+id/open_close"
+            android:checked="false"
+            android:title="Store Opening/ Closing" />
+
+
+        <item
+            android:id="@+id/logout"
+            android:checked="false"
+            android:title="Logout" />
+
+    </group>
+
+
+</menu>

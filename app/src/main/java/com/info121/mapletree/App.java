@@ -29,8 +29,7 @@ public class App extends Application {
     public static String DEVICE_TYPE = "ANDROID";
     String TAG = "Application";
 
-
-    public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:83/RestAPIComfortDelgro/MyLimoService.svc/";
+    public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:84/RestAPIMapletree/MyLimoService.svc/";
     public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
     public static String CONST_PHOTO_URL = "http://alexisinfo121.noip.me/IOPS/images/mycoachpics/";
 
@@ -71,7 +70,7 @@ public class App extends Application {
     public static String test = "";
 
 
-    public static List<Job> jobList = new ArrayList<>();
+
 
     // mcts server "124.6.61.70"
     // NEW SERVER
