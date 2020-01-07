@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
     <color name="colorPrimaryDark">#EEEEEE</color>
-    <color name="colorAccent">#FF9800</color>
+    <color name="colorAccent">#F5A01A</color>
 
     <color name="divider">#D7F0FF</color>
     <color name="green">#3C8D00</color>
@@ -54,9 +54,18 @@
     <color name="navigation_text">#004881</color>
 
     <color name="title_text">#111111</color>
+    <color name="cell_text_light">#8BA1AF</color>
     <color name="cell_text">#3F3F3F</color>
     <color name="cell_label">#3F3F3F</color>
     <color name="cell_label_dark">#292929</color>
+
+    <color name="switchTrack">#ffd600</color>
+    <color name="switchTrackDisable">#90caf9</color>
+    <color name="switchTrackActive">#1565c0</color>
+    <color name="switchTrackNormal">#90caf9</color>
+    <color name="switchThumbBgActive">#1b5e20</color>
+    <color name="switchThumbActive">#ad1457</color>
+    <color name="switchThumbkNormal">#64b5f6</color>
 
 
 </resources>

@@ -169,6 +169,17 @@ public class RoundsActivity extends AppCompatActivity {
             }
         });
 
+        mLogout  = mNavigationView.getMenu().findItem(R.id.logout);
+        mLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                Intent intent = new Intent(RoundsActivity.this, LoginActivity.class);
+                startActivity(intent);
+                return false;
+            }
+        });
+
     }
 
     private void showTime() {
@@ -177,6 +188,7 @@ public class RoundsActivity extends AppCompatActivity {
     }
 
     private void callGetRoundsApi() {
+        mSwipeLayout.setRefreshing(true);
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetRounds();
 
         call.enqueue(new Callback<ObjectRes>() {

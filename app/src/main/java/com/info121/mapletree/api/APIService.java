@@ -19,5 +19,30 @@ public interface APIService {
     @GET("getRounds")
     Call<ObjectRes> GetRounds();
 
+    @GET("getLevels")
+    Call<ObjectRes> GetLevels();
+
+    @GET("getUnits/{level},{code}")
+    Call<ObjectRes> GetUnits(@Path("level") String level, @Path("code") String code);
+
+
+    //        1. roundcode
+//        2. block
+//        3. level
+//        4. unit
+//        5. tennantcode
+//        6. tennantname
+//        7. status
+
+    @GET("saveUnit/{roundCode},{block},{level},{unit},{tenantcode},{tenantname},{status}")
+    Call<ObjectRes> SaveUnits(@Path("roundCode") String roundCode,
+                              @Path("block") String block,
+                              @Path("level") String level,
+                              @Path("unit") String unit,
+                              @Path("tenantcode") String tenantcode,
+                              @Path("tenantname") String tenantname,
+                              @Path("status") String status);
+
+
 
 }

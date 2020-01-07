@@ -8,11 +8,11 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="windowNoTitle">true</item>
 
-<!--        <item name="android:windowFullscreen">false</item>-->
-<!--        <item name="android:windowContentOverlay">@null</item>-->
-<!--&lt;!&ndash;<item name="android:fitsSystemWindows">false</item>&ndash;&gt;-->
-<!--        <item name="android:windowTranslucentStatus">true</item>-->
-<!--        <item name="android:windowTranslucentNavigation">true</item>-->
+        <!--        <item name="android:windowFullscreen">false</item>-->
+        <!--        <item name="android:windowContentOverlay">@null</item>-->
+        <!--&lt;!&ndash;<item name="android:fitsSystemWindows">false</item>&ndash;&gt;-->
+        <!--        <item name="android:windowTranslucentStatus">true</item>-->
+        <!--        <item name="android:windowTranslucentNavigation">true</item>-->
     </style>
 
     <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
@@ -90,5 +90,23 @@
         <item name="fontPath">fonts/Lato-Black.ttf</item>
         <item name="android:textColor">@color/title_text</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="shop_switch" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/green</item>
+
+        <!-- inactive thumb color -->
+        <item name="colorSwitchThumbNormal">@color/red</item>
+
+
+        <!-- inactive track color (30% transparency) -->
+        <item name="android:colorForeground">@color/colorAccent</item>
+
+    </style>
+
+    <style name="SwitchCompatStyle">
+        <item name="thumbTint">@color/red</item>
+        <item name="trackTint">@color/red</item>
     </style>
 </resources>

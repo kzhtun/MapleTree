@@ -97,7 +97,7 @@
                     android:paddingLeft="10dp"
                     android:inputType="textPassword"
                     style="@style/cell_text"
-                    android:text="info121"
+                    android:text=""
                     android:background="@drawable/rounded_edittext"
                     android:textColor="@color/edit_text_color" />
 

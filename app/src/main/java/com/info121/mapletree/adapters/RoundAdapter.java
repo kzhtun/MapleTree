@@ -1,6 +1,7 @@
 package com.info121.mapletree.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.info121.mapletree.R;
+import com.info121.mapletree.activities.LevelsActivity;
 import com.info121.mapletree.models.RoundsDetails;
 
 import java.util.ArrayList;
@@ -48,16 +50,25 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         setAnimation(viewHolder.itemView, i);
-
-
 
         if(roundsDetailsList.get(i).getStatus().equalsIgnoreCase("CLOSE")){
             viewHolder.parent.setBackgroundResource(R.drawable.rounded_layout_dark);
         }
 
         viewHolder.title.setText(roundsDetailsList.get(i).getDescription());
+
+        viewHolder.parent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, LevelsActivity.class);
+                intent.putExtra("ROUND", roundsDetailsList.get(i).getCode());
+                intent.putExtra("NAME", roundsDetailsList.get(i).getDescription());
+
+                mContext.startActivity(intent);
+            }
+        });
 
 
     }

@@ -81,16 +81,31 @@ public class LoginActivity extends AbstractActivity {
         mApiVersion.setText("Api " + Util.getVersionCode(mContext));
         mUiVersion.setText("Ver " + Util.getVersionName(mContext));
 
+
+        mPassword.setText("info121");
+
     }
 
 
     @OnClick(R.id.login)
-    public void loginOnClick(){
-        mProgressBar.setVisibility(View.VISIBLE);
-        callValidateUser();
+    public void loginOnClick() {
+        if (mUserName.getText().length() == 0 ) {
+            mUserName.setError("User name required.");
+            mUserName.requestFocus();
+        }
+
+        if (mPassword.getText().length() == 0) {
+            mPassword.setError("Password required.");
+            mPassword.requestFocus();
+        }
+
+        if (mUserName.getText().length() >  0 && mPassword.getText().length() > 0 ) {
+            mProgressBar.setVisibility(View.VISIBLE);
+            callValidateUser();
+        }
     }
 
-    private void callValidateUser(){
+    private void callValidateUser() {
         Calendar c = Calendar.getInstance();
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
@@ -107,14 +122,14 @@ public class LoginActivity extends AbstractActivity {
             @Override
             public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
                 mProgressBar.setVisibility(View.GONE);
-                if(response.body().getResponsemessage().equalsIgnoreCase("Valid")) {
+                if (response.body().getResponsemessage().equalsIgnoreCase("Valid")) {
 
                     App.userName = mUserName.getText().toString().trim();
                     App.authToken = response.body().getToken();
 
                     loginSuccessful();
 
-                }else{
+                } else {
                     mUserName.setError("Invalid user name or password.");
                     mUserName.requestFocus();
                 }
@@ -129,7 +144,7 @@ public class LoginActivity extends AbstractActivity {
 
     }
 
-    private void callCheckVersion(){
+    private void callCheckVersion() {
 //        Call<ObjectRes> call = RestClient.COACH().getApiService().CheckVersion(String.valueOf(Util.getVersionCode(mContext)));
 //
 //        call.enqueue(new Callback<ObjectRes>() {
@@ -147,18 +162,17 @@ public class LoginActivity extends AbstractActivity {
 //        });
     }
 
-    private void callUpdateDevice(){
-        Log.e("====" , "=========================================");
-        Log.e("DEVICE ID: " , Util.getDeviceID(getApplicationContext()));
-        Log.e("DEVICE TYPE " , App.DEVICE_TYPE);
-        Log.e("FCM TOKEN" , App.FCM_TOKEN);
-        Log.e("====" , "=========================================");
-
+    private void callUpdateDevice() {
+        Log.e("====", "=========================================");
+        Log.e("DEVICE ID: ", Util.getDeviceID(getApplicationContext()));
+        Log.e("DEVICE TYPE ", App.DEVICE_TYPE);
+        Log.e("FCM TOKEN", App.FCM_TOKEN);
+        Log.e("====", "=========================================");
 
 
     }
 
-    private void loginSuccessful(){
+    private void loginSuccessful() {
         mProgressBar.setVisibility(View.GONE);
 
 

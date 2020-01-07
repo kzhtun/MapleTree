@@ -10,7 +10,7 @@ import java.util.List;
 public class ObjectRes {
 	@SerializedName("LevelDetails")
 	@Expose
-	public Object levelDetails;
+	public List<LevelDetail> levelDetails;
 	@SerializedName("ProfileDetails")
 	@Expose
 	public ProfileDetails profileDetails;
@@ -19,7 +19,7 @@ public class ObjectRes {
 	public List<RoundsDetails> roundsDetails = null;
 	@SerializedName("UnitDetails")
 	@Expose
-	public Object unitDetails;
+	public List<UnitDetail> unitDetails;
 	@SerializedName("jobcount")
 	@Expose
 	public Object jobcount;
@@ -45,11 +45,12 @@ public class ObjectRes {
 	@Expose
 	public String token;
 
-	public Object getLevelDetails() {
+
+	public List<LevelDetail> getLevelDetails() {
 		return levelDetails;
 	}
 
-	public void setLevelDetails(Object levelDetails) {
+	public void setLevelDetails(List<LevelDetail> levelDetails) {
 		this.levelDetails = levelDetails;
 	}
 
@@ -69,11 +70,11 @@ public class ObjectRes {
 		this.roundsDetails = roundsDetails;
 	}
 
-	public Object getUnitDetails() {
+	public List<UnitDetail> getUnitDetails() {
 		return unitDetails;
 	}
 
-	public void setUnitDetails(Object unitDetails) {
+	public void setUnitDetails(List<UnitDetail> unitDetails) {
 		this.unitDetails = unitDetails;
 	}
 
