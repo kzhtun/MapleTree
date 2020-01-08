@@ -33,6 +33,7 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder>{
     }
 
     public void updateList(List<RoundsDetails> list){
+        lastPosition = -1;
         roundsDetailsList = list;
     }
 

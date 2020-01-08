@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#EEEEEE</color>
+    <color name="colorPrimaryDark">#F5A01A</color>
     <color name="colorAccent">#F5A01A</color>
 
     <color name="divider">#D7F0FF</color>
@@ -28,8 +28,8 @@
     <color name="accept">#0DAA00</color>
     <color name="reject">#FF1400</color>
 
-    <color name="layout_green">#25A200</color>
-    <color name="layout_green_stroke">#2CBE00</color>
+    <color name="layout_green">#0DAA00</color>
+    <color name="layout_green_stroke">#10C701</color>
 
     <color name="layout_grey">#888888</color>
     <color name="layout_grey_stroke">#777777</color>

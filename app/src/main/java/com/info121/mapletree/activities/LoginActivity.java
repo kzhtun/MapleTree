@@ -81,9 +81,7 @@ public class LoginActivity extends AbstractActivity {
         mApiVersion.setText("Api " + Util.getVersionCode(mContext));
         mUiVersion.setText("Ver " + Util.getVersionName(mContext));
 
-
         mPassword.setText("info121");
-
     }
 
 

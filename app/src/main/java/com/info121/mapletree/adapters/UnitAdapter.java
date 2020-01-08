@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,22 +34,43 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
+public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
 
+    int[][] states = new int[][]{
+            new int[]{-android.R.attr.state_checked},
+            new int[]{android.R.attr.state_checked},
+    };
 
+    int[] thumbColors = new int[]{
+            Color.parseColor("#FF1400"),
+            Color.parseColor("#25A200")
+    };
+
+    int[] trackColors = new int[]{
+            Color.parseColor("#55FF1400"),
+            Color.parseColor("#5525A200")
+    };
 
     private int lastPosition = -1;
     Context mContext;
-    List<UnitDetail> unitDetailList = new ArrayList<>();
+    static List<UnitDetail> unitDetailList = new ArrayList<>();
+   // List<Boolean> shopStatusList = new ArrayList<>();
+
+    SparseBooleanArray itemStateArray= new SparseBooleanArray();
 
     public UnitAdapter(Context context, List<UnitDetail> unitDetailList) {
         this.mContext = context;
         this.unitDetailList = unitDetailList;
+
+
     }
 
-    public void updateList(List<UnitDetail> list){
+    public void updateList(List<UnitDetail> list) {
+        lastPosition = -1;
         unitDetailList = list;
+
     }
+
 
     @NonNull
     @Override
@@ -63,56 +85,72 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
         return new ViewHolder(promotionView);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, final int i) {
         setAnimation(viewHolder.itemView, i);
 
-
+        DrawableCompat.setTintList(DrawableCompat.wrap(viewHolder.shopSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
+        DrawableCompat.setTintList(DrawableCompat.wrap(viewHolder.shopSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
 
         viewHolder.srNo.setText(i + 1 + "");
-        viewHolder.unitNo.setText("#" + unitDetailList.get(i).getLevel() + "-" +  unitDetailList.get(i).getUnit());
+        viewHolder.unitNo.setText("#" + unitDetailList.get(i).getLevel() + "-" + unitDetailList.get(i).getUnit());
         viewHolder.shopName.setText(unitDetailList.get(i).getName());
 
-        if(unitDetailList.get(i).getStatus().equalsIgnoreCase("OPEN")) {
+        if (unitDetailList.get(i).getStatus().equalsIgnoreCase("OPEN")) {
             viewHolder.shopSwitch.setChecked(true);
-            viewHolder.shopSwitch.setText("OPEN");
-            viewHolder.shopSwitch.setSwitchPadding((int) Util.convertDpToPixel(8, mContext));
-            viewHolder.shopSwitch.setTextColor(mContext.getResources().getColor(R.color.dark_green));
-        }else{
+            viewHolder.shopStatus.setText("OPEN");
+            viewHolder.shopStatus.setTextColor(Color.parseColor("#3d8c00"));
+        } else {
             viewHolder.shopSwitch.setChecked(false);
-            viewHolder.shopSwitch.setText("CLOSE");
-            viewHolder.shopSwitch.setSwitchPadding((int) Util.convertDpToPixel(5, mContext));
-            viewHolder.shopSwitch.setTextColor(mContext.getResources().getColor(R.color.reject));
+            viewHolder.shopStatus.setText("CLOSE");
+            viewHolder.shopStatus.setTextColor(Color.parseColor("#FF1400"));
         }
 
-
-        viewHolder.shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if(b) {
-                    compoundButton.setText("OPEN");
-                    ((SwitchCompat) compoundButton).setSwitchPadding((int) Util.convertDpToPixel(8, mContext));
-                    compoundButton.setTextColor(mContext.getResources().getColor(R.color.dark_green));
-                    unitDetailList.get(i).setStatus("OPEN");
-
-                }else {
-                    compoundButton.setText("CLOSE");
-                    ((SwitchCompat) compoundButton).setSwitchPadding((int) Util.convertDpToPixel(5, mContext));
-                    compoundButton.setTextColor(mContext.getResources().getColor(R.color.reject));
-                    unitDetailList.get(i).setStatus("CLOSE");
-                }
-            }
-        });
+ //       itemStateArray.put(i, (unitDetailList.get(i).getStatus().equalsIgnoreCase("OPEN"))? true : false);
 
 
 
-       if(unitDetailList.get(i).getProgress() != null){
+
+//        //if(itemStateArray.get(i)){
+//        if (unitDetailList.get(i).getStatus().equalsIgnoreCase("CLOSE")) {
+//            viewHolder.shopSwitch.setChecked(false);
+//            viewHolder.shopStatus.setText("CLOSE");
+//            viewHolder.shopStatus.setTextColor(mContext.getResources().getColor(R.color.reject));
+//        } else {
+//            viewHolder.shopSwitch.setChecked(true);
+//            viewHolder.shopStatus.setText("OPEN");
+//            viewHolder.shopStatus.setTextColor(mContext.getResources().getColor(R.color.dark_green));
+//        }
+
+
+
+
+
+
+
+//        viewHolder.shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+//                if(b) {
+//                    unitDetailList.get(i).setStatus("OPEN");
+//                    viewHolder.shopStatus.setTextColor(mContext.getResources().getColor(R.color.dark_green));
+//                }else {
+//                    unitDetailList.get(i).setStatus("CLOSE");
+//                    viewHolder.shopStatus.setTextColor(mContext.getResources().getColor(R.color.reject));
+//                }
+//
+//                viewHolder.shopStatus.setText( unitDetailList.get(i).getStatus());
+//            }
+//        });
+
+
+        if (unitDetailList.get(i).getProgress() != null) {
 
             if (unitDetailList.get(i).getProgress().equalsIgnoreCase("P")) {
                 viewHolder.success.setVisibility(View.GONE);
                 viewHolder.failed.setVisibility(View.GONE);
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
-
             }
 
             if (unitDetailList.get(i).getProgress().equalsIgnoreCase("S")) {
@@ -124,12 +162,11 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
                 viewHolder.progressBar.setVisibility(View.GONE);
                 viewHolder.failed.setVisibility(View.VISIBLE);
             }
-        }else
-       {
-           viewHolder.success.setVisibility(View.GONE);
-           viewHolder.failed.setVisibility(View.GONE);
-           viewHolder.progressBar.setVisibility(View.GONE);
-       }
+        } else {
+            viewHolder.success.setVisibility(View.GONE);
+            viewHolder.failed.setVisibility(View.GONE);
+            viewHolder.progressBar.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -146,7 +183,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.main_layout)
         LinearLayout parent;
@@ -160,6 +197,9 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
         @BindView(R.id.shop_name)
         TextView shopName;
 
+        @BindView(R.id.shop_status)
+        TextView shopStatus;
+
         @BindView(R.id.shop_switch)
         SwitchCompat shopSwitch;
 
@@ -172,27 +212,34 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder>{
         @BindView(R.id.failed)
         ImageView failed;
 
+        CheckedChangeListener checkChangeListener;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            int[][] states = new int[][] {
-                    new int[] {-android.R.attr.state_checked},
-                    new int[] {android.R.attr.state_checked},
-            };
+            this.setIsRecyclable(false);
 
-            int[] thumbColors = new int[] {
-                    Color.parseColor("#FF1400"),
-                    Color.parseColor("#25A200")
-            };
 
-            int[] trackColors = new int[] {
-                    Color.parseColor("#55FF1400"),
-                    Color.parseColor("#5525A200")
-            };
+           shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-            DrawableCompat.setTintList(DrawableCompat.wrap( shopSwitch.getThumbDrawable()), new ColorStateList(states, thumbColors));
-            DrawableCompat.setTintList(DrawableCompat.wrap( shopSwitch.getTrackDrawable()), new ColorStateList(states, trackColors));
+                    if (b) {
+                        unitDetailList.get(getAdapterPosition()).setStatus("OPEN");
+                        shopStatus.setText("OPEN");
+                        shopStatus.setTextColor(Color.parseColor("#3d8c00"));
+                    } else {
+                        unitDetailList.get(getAdapterPosition()).setStatus("CLOSE");
+                        shopStatus.setText("CLOSE");
+                        shopStatus.setTextColor(Color.parseColor("#FF1400"));
+                    }
+                }
+            });
         }
+
+
+
     }
+
 }

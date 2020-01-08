@@ -15,6 +15,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +36,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.internal.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,8 +57,8 @@ public class RoundsActivity extends AppCompatActivity {
     @BindView(R.id.rv_round)
     RecyclerView mRecyclerView;
 
-    @BindView(R.id.pullToRefresh)
-    SwipeRefreshLayout mSwipeLayout;
+    @BindView(R.id.refresh)
+    ImageView mRefresh;
 
     @BindView(R.id.date)
     TextView mDate;
@@ -67,6 +71,7 @@ public class RoundsActivity extends AppCompatActivity {
 
 
     MenuItem mProfile, mLevels, mLogout;
+    Animation animation;
 
 
     @Override
@@ -117,14 +122,6 @@ public class RoundsActivity extends AppCompatActivity {
         roundAdapter = new RoundAdapter(mContext, roundsDetailsList);
         mRecyclerView.setAdapter(roundAdapter);
 
-        callGetRoundsApi();
-
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                callGetRoundsApi();
-            }
-        });
 
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("ddd, dd MM yyyy");
@@ -169,7 +166,7 @@ public class RoundsActivity extends AppCompatActivity {
             }
         });
 
-        mLogout  = mNavigationView.getMenu().findItem(R.id.logout);
+        mLogout = mNavigationView.getMenu().findItem(R.id.logout);
         mLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -180,6 +177,27 @@ public class RoundsActivity extends AppCompatActivity {
             }
         });
 
+
+        // refresh animation
+        animation = new RotateAnimation(0.0f, 360.0f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,
+                0.5f);
+        animation.setRepeatCount(-1);
+        animation.setDuration(500);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mRefresh.startAnimation(animation);
+        callGetRoundsApi();
+    }
+
+    @OnClick(R.id.refresh)
+    public void refreshOnClick(){
+        mRefresh.startAnimation(animation);
+        callGetRoundsApi();
     }
 
     private void showTime() {
@@ -188,13 +206,12 @@ public class RoundsActivity extends AppCompatActivity {
     }
 
     private void callGetRoundsApi() {
-        mSwipeLayout.setRefreshing(true);
+
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetRounds();
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
             public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-                mSwipeLayout.setRefreshing(false);
                 roundsDetailsList = (List<RoundsDetails>) response.body().getRoundsDetails();
 
                 if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
@@ -203,14 +220,27 @@ public class RoundsActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(mContext, "Error in getting round list", Toast.LENGTH_SHORT).show();
                 }
+
+                clearRefreshAnimation();
             }
 
             @Override
             public void onFailure(Call<ObjectRes> call, Throwable t) {
-                mSwipeLayout.setRefreshing(false);
                 Toast.makeText(mContext, "Getting round list failed", Toast.LENGTH_SHORT).show();
+                clearRefreshAnimation();
             }
         });
+    }
+
+
+    private void clearRefreshAnimation(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mRefresh.clearAnimation();
+            }
+        }, 500);
+
     }
 
 

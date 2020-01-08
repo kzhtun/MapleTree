@@ -1,9 +1,12 @@
 package com.info121.mapletree.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -82,6 +87,11 @@ public class LevelsActivity extends AppCompatActivity {
     String mRoundCode = "";
     String mRoundName = "";
 
+
+    Dialog dialog;
+
+    int callCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,21 +129,21 @@ public class LevelsActivity extends AppCompatActivity {
 
         callGetLevels(mRoundCode);
 
+
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 
-
-
-
         unitAdapter = new UnitAdapter(mContext, unitDetailList);
         mRecyclerView.setAdapter(unitAdapter);
+//
+//        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                callGetUnits(mLevel.getSelectedItem().toString(), mRoundCode);
+//            }
+//        });
 
-        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                callGetUnits(mLevel.getSelectedItem().toString(), mRoundCode);
-            }
-        });
+        mSwipeLayout.setEnabled(false);
 
     }
 
@@ -141,33 +151,29 @@ public class LevelsActivity extends AppCompatActivity {
     @OnClick(R.id.update)
     public void updateOnClick() {
 
+        callCount = 0;
+
         for (int i = 0; i < unitDetailList.size(); i++) {
             unitDetailList.get(i).setProgress("P");
             unitAdapter.notifyDataSetChanged();
         }
 
         for (int i = 0; i < unitDetailList.size(); i++) {
-
             final int j = i;
-
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     callUpdateUnits(unitDetailList.get(j), j);
                 }
-            }, 500);
+            }, 300);
 
         }
     }
 
     private void callUpdateUnits(final UnitDetail unit, final int index) {
-//        1. roundcode
-//        2. block
-//        3. level
-//        4. unit
-//        5. tennantcode
-//        6. tennantname
-//        7. status
+
+        // testing faliure
+        //if (index == 9) unit.setUnit("ab/cc/dd");
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().SaveUnits(mRoundCode,
                 unit.getBlock(),
@@ -177,24 +183,99 @@ public class LevelsActivity extends AppCompatActivity {
                 unit.getName(),
                 unit.getStatus());
 
-
-
         call.enqueue(new Callback<ObjectRes>() {
             @Override
             public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-                Log.e("Update ", unit.getName() + " ----OK ");
-                unitDetailList.get(index).setProgress("S");
-                unitAdapter.notifyDataSetChanged();
+                if (response.body() != null)
+                    if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
+                        Log.e("Update ", index + " : " + unit.getName() + " ----OK ");
+                        unitDetailList.get(index).setProgress("S");
+                        unitAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
+                        unitDetailList.get(index).setProgress("F");
+                        unitAdapter.notifyDataSetChanged();
+                    }
+
+                checkAndShowMessage();
+
             }
 
             @Override
             public void onFailure(Call<ObjectRes> call, Throwable t) {
-                Log.e("Update ", unit.getName() + " ---- Fail ");
+                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail ");
                 unitDetailList.get(index).setProgress("F");
                 unitAdapter.notifyDataSetChanged();
+
+                checkAndShowMessage();
+
+            }
+        });
+    }
+
+    private void checkAndShowMessage() {
+        Boolean b = true;
+
+        // add to call count
+        callCount++;
+
+        if (callCount == unitDetailList.size()) {
+            // reset call count;
+            callCount = 0;
+
+            for (int i = 0; i < unitDetailList.size(); i++)
+                if (!unitDetailList.get(i).getProgress().equalsIgnoreCase("S")) {
+                    b = false;
+                    break;
+                }
+
+            if (b)
+                showCustomAlertDialog("All shops in this level has been submitted successfully", true);
+            else
+                showCustomAlertDialog("Some shops may have not been submitted correctly. Please re-submit again", false);
+        }
+
+
+    }
+
+
+    private void showCustomAlertDialog(String msg, final boolean finish) {
+
+        Log.e("Show Dialog", "..");
+
+        dialog = new Dialog(mContext);
+
+        dialog.setContentView(R.layout.dialog_message);
+        dialog.setTitle("ABC");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView title = dialog.findViewById(R.id.title);
+        TextView message = dialog.findViewById(R.id.message);
+        Button ok = dialog.findViewById(R.id.ok);
+
+        title.setText("MAPLETREE");
+        message.setText(msg);
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+                if(finish) finish();
+
             }
         });
 
+        // resize dialog
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = (int) (displayRectangle.width() * 0.85f);
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
     }
 
 

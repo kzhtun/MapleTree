@@ -172,7 +172,7 @@
             android:layout_margin="16dp"
             android:background="@drawable/rounded_button_default"
             android:letterSpacing="0.1"
-            android:text="UPDATE"
+            android:text="SUBMIT"
             android:textColor="@color/white" />
 
     </LinearLayout>
