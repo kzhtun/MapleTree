@@ -19,8 +19,11 @@ public interface APIService {
     @GET("getRounds")
     Call<ObjectRes> GetRounds();
 
-    @GET("getLevels")
-    Call<ObjectRes> GetLevels();
+    @GET("getLevels/{roundCode}")
+    Call<ObjectRes> GetLevels(@Path("roundCode") String roundCode);
+
+    @GET("getNotCheckedLevels/{roundCode}")
+    Call<ObjectRes> GetNotCheckedLevels(@Path("roundCode") String roundCode);
 
     @GET("getUnits/{level},{code}")
     Call<ObjectRes> GetUnits(@Path("level") String level, @Path("code") String code);

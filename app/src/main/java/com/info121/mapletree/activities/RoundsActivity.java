@@ -2,6 +2,7 @@ package com.info121.mapletree.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -66,11 +67,18 @@ public class RoundsActivity extends AppCompatActivity {
     @BindView(R.id.time)
     TextView mTime;
 
+    @BindView(R.id.login_as)
+    TextView mLoginAs;
+
+    @BindView(R.id.phone_no)
+    TextView mPhoneNo;
+
+
     RoundAdapter roundAdapter;
     List<RoundsDetails> roundsDetailsList = new ArrayList<>();
 
 
-    MenuItem mProfile, mLevels, mLogout;
+    MenuItem mProfile, mLevels ;
     Animation animation;
 
 
@@ -102,9 +110,9 @@ public class RoundsActivity extends AppCompatActivity {
         mDrawerToggle.syncState();
 
 
-        mDrawerToggle.setDrawerIndicatorEnabled(false);
+        //mDrawerToggle.setDrawerIndicatorEnabled(false);
+        //mDrawerToggle.setHomeAsUpIndicator(R.mipmap.ic_drawer);
 
-        mDrawerToggle.setHomeAsUpIndicator(R.mipmap.ic_drawer);
         mDrawerToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,10 +131,13 @@ public class RoundsActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(roundAdapter);
 
 
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("ddd, dd MM yyyy");
-        String formattedDate = df.format(c.getTime());
+//        Calendar c = Calendar.getInstance();
+//        SimpleDateFormat df = new SimpleDateFormat("ddd, dd MM yyyy");
+//        String formattedDate = df.format(c.getTime());
+//
         showTime();
+
+
 
         final Handler timer = new Handler(getMainLooper());
         timer.postDelayed(new Runnable() {
@@ -139,8 +150,11 @@ public class RoundsActivity extends AppCompatActivity {
         }, 60000);
 
         TextView mUserName = mNavigationView.getHeaderView(0).findViewById(R.id.user_name);
+        TextView mLastLogin = mNavigationView.getHeaderView(0).findViewById(R.id.last_login);
+        ImageView mLogout = mNavigationView.getHeaderView(0).findViewById(R.id.logout);
 
         mUserName.setText(App.userName);
+        mLastLogin.setText(App.lastLogin);
 
 
         mProfile = mNavigationView.getMenu().findItem(R.id.profile);
@@ -166,17 +180,15 @@ public class RoundsActivity extends AppCompatActivity {
             }
         });
 
-        mLogout = mNavigationView.getMenu().findItem(R.id.logout);
-        mLogout.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+
+        mLogout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
+            public void onClick(View view) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
                 Intent intent = new Intent(RoundsActivity.this, LoginActivity.class);
                 startActivity(intent);
-                return false;
             }
         });
-
 
         // refresh animation
         animation = new RotateAnimation(0.0f, 360.0f,
@@ -184,8 +196,34 @@ public class RoundsActivity extends AppCompatActivity {
                 0.5f);
         animation.setRepeatCount(-1);
         animation.setDuration(500);
+
+
+        //mNavigationView.setItemIconTintList(null);
+
+        // set login info
+        mLoginAs.setText("Welcome " + App.userName);
+        //  mLastLogin.setText("Last Login : " + App.lastLogin);
     }
 
+
+    @OnClick(R.id.phone_no)
+    public void phoneOnClick() {
+        callPhone();
+    }
+
+    @OnClick(R.id.phone_icon)
+    public void phoneIconClick() {
+        callPhone();
+    }
+
+    private void callPhone() {
+        String phoneNo = "6848 2791";
+        Uri number = Uri.parse("tel:" + phoneNo);
+        Intent callIntent = new Intent(Intent.ACTION_DIAL, number);
+        startActivity(callIntent);
+
+        Toast.makeText(mContext, "Phone Call .... to  " + phoneNo, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     protected void onResume() {
@@ -195,13 +233,15 @@ public class RoundsActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.refresh)
-    public void refreshOnClick(){
+    public void refreshOnClick() {
         mRefresh.startAnimation(animation);
         callGetRoundsApi();
     }
 
     private void showTime() {
-        String dateString = Util.convertDateToString(Calendar.getInstance().getTime(), "hh:mm a");
+      //  mDate.setText(Util.convertDateToString(Calendar.getInstance().getTime(), "EEE, dd MMM yyyy") + ", ");
+        String dateString = Util.convertDateToString(Calendar.getInstance().getTime(), "EEE dd MMM yyyy hh:mma");
+
         mTime.setText(dateString.toString());
     }
 
@@ -233,7 +273,7 @@ public class RoundsActivity extends AppCompatActivity {
     }
 
 
-    private void clearRefreshAnimation(){
+    private void clearRefreshAnimation() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

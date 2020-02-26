@@ -81,6 +81,9 @@ public class LevelsActivity extends AppCompatActivity {
     @BindView(R.id.update)
     Button mUpdate;
 
+    @BindView(R.id.login_as)
+    TextView mLoginAs;
+
     UnitAdapter unitAdapter;
     List<UnitDetail> unitDetailList = new ArrayList<>();
 
@@ -105,10 +108,9 @@ public class LevelsActivity extends AppCompatActivity {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("ddd, dd MM yyyy");
-        String formattedDate = df.format(c.getTime());
+
         showTime();
+        //mDate.setText(Util.convertDateToString(Calendar.getInstance().getTime(), "EEE, dd MMM yyyy") + ", ");
 
         final Handler timer = new Handler(getMainLooper());
         timer.postDelayed(new Runnable() {
@@ -144,6 +146,9 @@ public class LevelsActivity extends AppCompatActivity {
 //        });
 
         mSwipeLayout.setEnabled(false);
+
+        // set login info
+        mLoginAs.setText("Welcome " + App.userName);
 
     }
 
@@ -246,12 +251,18 @@ public class LevelsActivity extends AppCompatActivity {
         dialog = new Dialog(mContext);
 
         dialog.setContentView(R.layout.dialog_message);
-        dialog.setTitle("ABC");
+        dialog.setTitle("");
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         TextView title = dialog.findViewById(R.id.title);
         TextView message = dialog.findViewById(R.id.message);
         Button ok = dialog.findViewById(R.id.ok);
+
+
+        if(finish){
+            title.setTextColor(getResources().getColor( R.color.accept));
+            ok.setBackgroundResource(R.drawable.rounded_button_green);
+        }
 
         title.setText("MAPLETREE");
         message.setText(msg);
@@ -280,7 +291,7 @@ public class LevelsActivity extends AppCompatActivity {
 
 
     private void callGetLevels(final String round) {
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels();
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels(round);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -293,7 +304,6 @@ public class LevelsActivity extends AppCompatActivity {
                     for (int i = 0; i < response.body().getLevelDetails().size(); i++) {
                         levels.add(response.body().getLevelDetails().get(i).getLevel());
                     }
-
 
                     ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_item, levels);
                     dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -355,7 +365,7 @@ public class LevelsActivity extends AppCompatActivity {
     }
 
     private void showTime() {
-        String dateString = Util.convertDateToString(Calendar.getInstance().getTime(), "hh:mm a");
+        String dateString = Util.convertDateToString(Calendar.getInstance().getTime(), "EEE dd MMM yyyy hh:mma");
         mTime.setText(dateString.toString());
     }
 

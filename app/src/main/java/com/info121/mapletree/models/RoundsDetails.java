@@ -16,6 +16,12 @@ public class RoundsDetails {
     @SerializedName("starttime")
     @Expose
     public String starttime;
+
+    @SerializedName("roundinfo")
+    @Expose
+    public String roundinfo;
+
+
     @SerializedName("status")
     @Expose
     public String status;
@@ -59,5 +65,13 @@ public class RoundsDetails {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getRoundinfo() {
+        return roundinfo;
+    }
+
+    public void setRoundinfo(String roundinfo) {
+        this.roundinfo = roundinfo;
     }
 }

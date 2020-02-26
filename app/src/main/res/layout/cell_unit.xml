@@ -8,6 +8,7 @@
     android:layout_marginLeft="16dp"
     android:layout_marginTop="16dp"
     android:layout_marginRight="16dp"
+    android:layout_marginBottom="16dp"
     android:background="@drawable/rounded_layout"
     android:baselineAligned="false"
     android:orientation="vertical">
@@ -17,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
+
         android:orientation="vertical">
 
         <LinearLayout
@@ -65,7 +67,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -82,8 +84,9 @@
                 android:letterSpacing="0.1"
                 android:text="00"
                 android:textAllCaps="true"
+                android:textStyle="bold"
                 android:textColor="@color/navigation_text"
-                android:textSize="16sp" />
+                android:textSize="18sp" />
 
             <ProgressBar
                 android:id="@+id/progress_bar"

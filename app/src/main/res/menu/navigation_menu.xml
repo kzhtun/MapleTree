@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-
     <group android:id="@+id/group_1" android:checkableBehavior="single">
 
         <item
             android:id="@+id/profile"
             android:checked="false"
+            android:icon="@mipmap/ic_profile1"
             android:title="Profile" />
         <item
             android:id="@+id/open_close"
             android:checked="false"
+            android:icon="@mipmap/ic_open_close"
             android:title="Store Opening/ Closing" />
 
 
-        <item
-            android:id="@+id/logout"
-            android:checked="false"
-            android:title="Logout" />
 
     </group>
 
+<!--    <group android:id="@+id/group_2" android:checkableBehavior="single">-->
+<!--        <item-->
+<!--            android:checked="false"-->
+<!--            android:title="Tel : 6848 2791" />-->
+<!--        <item-->
+
+<!--            android:checked="false"-->
+<!--            android:title="Mon ~ Fri [10:00 AM ~ 7:00 PM]" />-->
+
+<!--        <item-->
+
+<!--            android:checked="false"-->
+<!--            android:title="INFO121 PTE LTD" />-->
+
+<!--    </group>-->
 
 </menu>
+

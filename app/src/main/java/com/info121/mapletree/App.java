@@ -29,7 +29,7 @@ public class App extends Application {
     public static String DEVICE_TYPE = "ANDROID";
     String TAG = "Application";
 
-    public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:84/RestAPIMapletree/MyLimoService.svc/";
+    public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:81/RestAPIMapletree/MyLimoService.svc/";
     public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
     public static String CONST_PHOTO_URL = "http://alexisinfo121.noip.me/IOPS/images/mycoachpics/";
 
@@ -43,7 +43,7 @@ public class App extends Application {
     public static String CONST_REMEMBER_ME = "REMEMBER_ME";
 
 
-
+    public static String lastLogin = "";
     public static String userName = "user";
     public static String deviceID = "00000";
     public static String authToken = "00000";

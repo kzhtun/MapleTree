@@ -8,6 +8,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ObjectRes {
+	@SerializedName("LevelNotCheckedDetails")
+	@Expose
+	public List<LevelDetail> LevelNotCheckedDetails;
+
 	@SerializedName("LevelDetails")
 	@Expose
 	public List<LevelDetail> levelDetails;
@@ -44,6 +48,11 @@ public class ObjectRes {
 	@SerializedName("token")
 	@Expose
 	public String token;
+
+	@SerializedName("lastlogin")
+	@Expose
+	public String lastlogin;
+
 
 
 	public List<LevelDetail> getLevelDetails() {
@@ -140,5 +149,21 @@ public class ObjectRes {
 
 	public void setToken(String token) {
 		this.token = token;
+	}
+
+	public String getLastlogin() {
+		return lastlogin;
+	}
+
+	public void setLastlogin(String lastlogin) {
+		this.lastlogin = lastlogin;
+	}
+
+	public List<LevelDetail> getLevelNotCheckedDetails() {
+		return LevelNotCheckedDetails;
+	}
+
+	public void setLevelNotCheckedDetails(List<LevelDetail> levelNotCheckedDetails) {
+		LevelNotCheckedDetails = levelNotCheckedDetails;
 	}
 }

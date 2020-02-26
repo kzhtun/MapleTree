@@ -124,6 +124,7 @@ public class LoginActivity extends AbstractActivity {
 
                     App.userName = mUserName.getText().toString().trim();
                     App.authToken = response.body().getToken();
+                    App.lastLogin = response.body().getLastlogin();
 
                     loginSuccessful();
 

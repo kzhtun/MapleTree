@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#F5A01A</color>
+    <color name="colorPrimaryDark">#C97900</color>
     <color name="colorAccent">#F5A01A</color>
+
+    <color name="toolbar_back">#F5A01A</color>
 
     <color name="divider">#D7F0FF</color>
     <color name="green">#3C8D00</color>
@@ -46,7 +48,7 @@
 
 
     <color name="default_button">#F5A01A</color>
-    <color name="default_button_stroke">#FFB238</color>
+    <color name="default_button_stroke">#FFBB52</color>
 
     <color name="normal_button">#004881</color>
     <color name="normal_button_stroke">#004881</color>
