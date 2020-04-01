@@ -8,13 +8,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ObjectRes {
-	@SerializedName("LevelNotCheckedDetails")
-	@Expose
-	public List<LevelDetail> LevelNotCheckedDetails;
-
 	@SerializedName("LevelDetails")
 	@Expose
 	public List<LevelDetail> levelDetails;
+	@SerializedName("LevelNotCheckedDetails")
+	@Expose
+	public List<LevelDetail> levelNotCheckedDetails;
 	@SerializedName("ProfileDetails")
 	@Expose
 	public ProfileDetails profileDetails;
@@ -24,21 +23,12 @@ public class ObjectRes {
 	@SerializedName("UnitDetails")
 	@Expose
 	public List<UnitDetail> unitDetails;
-	@SerializedName("jobcount")
+	@SerializedName("Version")
 	@Expose
-	public Object jobcount;
-	@SerializedName("jobcountlist")
+	public String version;
+	@SerializedName("lastlogin")
 	@Expose
-	public Object jobcountlist;
-	@SerializedName("jobdatelist")
-	@Expose
-	public Object jobdatelist;
-	@SerializedName("jobdetails")
-	@Expose
-	public Object jobdetails;
-	@SerializedName("jobs")
-	@Expose
-	public Object jobs;
+	public String lastlogin;
 	@SerializedName("responsemessage")
 	@Expose
 	public String responsemessage;
@@ -49,11 +39,6 @@ public class ObjectRes {
 	@Expose
 	public String token;
 
-	@SerializedName("lastlogin")
-	@Expose
-	public String lastlogin;
-
-
 
 	public List<LevelDetail> getLevelDetails() {
 		return levelDetails;
@@ -61,6 +46,14 @@ public class ObjectRes {
 
 	public void setLevelDetails(List<LevelDetail> levelDetails) {
 		this.levelDetails = levelDetails;
+	}
+
+	public List<LevelDetail> getLevelNotCheckedDetails() {
+		return levelNotCheckedDetails;
+	}
+
+	public void setLevelNotCheckedDetails(List<LevelDetail> levelNotCheckedDetails) {
+		this.levelNotCheckedDetails = levelNotCheckedDetails;
 	}
 
 	public ProfileDetails getProfileDetails() {
@@ -87,44 +80,20 @@ public class ObjectRes {
 		this.unitDetails = unitDetails;
 	}
 
-	public Object getJobcount() {
-		return jobcount;
+	public String getVersion() {
+		return version;
 	}
 
-	public void setJobcount(Object jobcount) {
-		this.jobcount = jobcount;
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
-	public Object getJobcountlist() {
-		return jobcountlist;
+	public String getLastlogin() {
+		return lastlogin;
 	}
 
-	public void setJobcountlist(Object jobcountlist) {
-		this.jobcountlist = jobcountlist;
-	}
-
-	public Object getJobdatelist() {
-		return jobdatelist;
-	}
-
-	public void setJobdatelist(Object jobdatelist) {
-		this.jobdatelist = jobdatelist;
-	}
-
-	public Object getJobdetails() {
-		return jobdetails;
-	}
-
-	public void setJobdetails(Object jobdetails) {
-		this.jobdetails = jobdetails;
-	}
-
-	public Object getJobs() {
-		return jobs;
-	}
-
-	public void setJobs(Object jobs) {
-		this.jobs = jobs;
+	public void setLastlogin(String lastlogin) {
+		this.lastlogin = lastlogin;
 	}
 
 	public String getResponsemessage() {
@@ -149,21 +118,5 @@ public class ObjectRes {
 
 	public void setToken(String token) {
 		this.token = token;
-	}
-
-	public String getLastlogin() {
-		return lastlogin;
-	}
-
-	public void setLastlogin(String lastlogin) {
-		this.lastlogin = lastlogin;
-	}
-
-	public List<LevelDetail> getLevelNotCheckedDetails() {
-		return LevelNotCheckedDetails;
-	}
-
-	public void setLevelNotCheckedDetails(List<LevelDetail> levelNotCheckedDetails) {
-		LevelNotCheckedDetails = levelNotCheckedDetails;
 	}
 }

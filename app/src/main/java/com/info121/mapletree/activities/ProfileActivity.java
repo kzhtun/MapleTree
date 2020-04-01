@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }, 60000);
 
-        callGetRoundsApi();
+        callGetProfile();
 
 
     }
@@ -112,13 +112,15 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
 
-    private void callGetRoundsApi() {
+    private void callGetProfile() {
         Calendar c = Calendar.getInstance();
 
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
         String todayDate = df.format(c.getTime());
 
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUserProfile(App.userName,"info121" + todayDate);
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUserProfile(App.userName,
+                App.secretKey,
+                App.specialKey);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override

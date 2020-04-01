@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.info121.mapletree.App;
 import com.info121.mapletree.R;
 import com.info121.mapletree.activities.LevelsActivity;
 import com.info121.mapletree.api.RestClient;
@@ -90,7 +91,9 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
 
         final LinearLayout uncheckLayout = viewHolder.uncheck_levels;
 
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetNotCheckedLevels(roundsDetailsList.get(i).getCode());
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetNotCheckedLevels(
+                roundsDetailsList.get(i).getCode(),
+                App.specialKey);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override

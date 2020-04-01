@@ -7,13 +7,16 @@ import com.info121.mapletree.App;
 
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.internal.Util;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -37,6 +40,7 @@ public class RestClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(App.CONST_REST_API_URL)
                 .client(new OkHttpClient().newBuilder()
+                        .protocols(Util.immutableList(Protocol.HTTP_1_1))
                         .addInterceptor(new Interceptor() {
                             @Override
                             public Response intercept(Chain chain) throws IOException {
@@ -57,8 +61,9 @@ public class RestClient {
                                 return chain.proceed(newRequest);
                             }
                         })
-                        .connectTimeout(60, TimeUnit.SECONDS)
-                        .readTimeout(60, TimeUnit.SECONDS)
+
+                        .connectTimeout(10, TimeUnit.SECONDS)
+                        .readTimeout(10, TimeUnit.SECONDS)
                         .build()
                 ).build();
 

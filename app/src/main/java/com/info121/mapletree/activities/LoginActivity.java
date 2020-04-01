@@ -27,6 +27,7 @@ import com.info121.mapletree.utils.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +62,9 @@ public class LoginActivity extends AbstractActivity {
     TextView mUiVersion;
 
     String todayDate;
+    Calendar c;
+    SimpleDateFormat df, dfKey;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,13 +85,31 @@ public class LoginActivity extends AbstractActivity {
         mApiVersion.setText("Api " + Util.getVersionCode(mContext));
         mUiVersion.setText("Ver " + Util.getVersionName(mContext));
 
-       // mPassword.setText("info121");
+
+        c = Calendar.getInstance(App.timeZone);
+        df = new SimpleDateFormat("ddMMyyyy");
+        dfKey =  new SimpleDateFormat("ddMMyyyyHH", Locale.getDefault());
+        todayDate = df.format(c.getTime());
+
+        String dd, mm, yyyy, hh;
+
+        dd = String.format("%02d", c.get(Calendar.DAY_OF_MONTH)) ;
+        mm = String.format("%02d", c.get(Calendar.MONTH) + 1) ;
+        yyyy = String.format("%04d", c.get(Calendar.YEAR));
+        hh = String.format("%02d", c.get(Calendar.HOUR_OF_DAY));
+
+        App.secretKey = "info121" + dd + mm + yyyy;
+        App.specialKey = Util.convertToSpecial("7" + dd + mm + yyyy + hh);
+
+        Log.e("Special Key : ",    App.specialKey );
+
+        // mPassword.setText("info121");
     }
 
 
     @OnClick(R.id.login)
     public void loginOnClick() {
-        if (mUserName.getText().length() == 0 ) {
+        if (mUserName.getText().length() == 0) {
             mUserName.setError("User name required.");
             mUserName.requestFocus();
         }
@@ -97,23 +119,19 @@ public class LoginActivity extends AbstractActivity {
             mPassword.requestFocus();
         }
 
-        if (mUserName.getText().length() >  0 && mPassword.getText().length() > 0 ) {
+        if (mUserName.getText().length() > 0 && mPassword.getText().length() > 0) {
             mProgressBar.setVisibility(View.VISIBLE);
             callValidateUser();
         }
     }
 
     private void callValidateUser() {
-        Calendar c = Calendar.getInstance();
-
-        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
-        todayDate = df.format(c.getTime());
-
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().ValidateUser(
                 mUserName.getText().toString().trim(),
                 mPassword.getText().toString().trim(),
-                "info121" + todayDate
+                App.secretKey,
+                App.specialKey
         );
 
         call.enqueue(new Callback<ObjectRes>() {
@@ -136,7 +154,7 @@ public class LoginActivity extends AbstractActivity {
 
             @Override
             public void onFailure(Call<ObjectRes> call, Throwable t) {
-
+                Log.e("Failed", t.getMessage());
             }
         });
 

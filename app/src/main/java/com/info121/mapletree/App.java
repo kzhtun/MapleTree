@@ -21,6 +21,7 @@ import com.info121.mapletree.utils.PrefDB;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -29,9 +30,13 @@ public class App extends Application {
     public static String DEVICE_TYPE = "ANDROID";
     String TAG = "Application";
 
-    public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:81/RestAPIMapletree/MyLimoService.svc/";
-    public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
-    public static String CONST_PHOTO_URL = "http://alexisinfo121.noip.me/IOPS/images/mycoachpics/";
+   // public static String CONST_REST_API_URL = "http://alexisinfo121.noip.me:81/RestAPIMapletree/MyLimoService.svc/";
+
+   public static String CONST_REST_API_URL = "http://vivocityservicemgt.vivocity.com.sg/restapimapletree/MyLimoService.svc/";
+  //  public static String CONST_REST_API_URL = "http://info121.sytes.net:81/restapimapletree/MyLimoService.svc/";
+
+//    public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
+//    public static String CONST_PHOTO_URL = "http://alexisinfo121.noip.me/IOPS/images/mycoachpics/";
 
     public static String CONST_USER_NAME = "USER_NAME";
     public static String CONST_ALREADY_LOGIN = "ALREADY_LOGIN";
@@ -44,9 +49,11 @@ public class App extends Application {
 
 
     public static String lastLogin = "";
-    public static String userName = "user";
+    public static String userName = "";
     public static String deviceID = "00000";
     public static String authToken = "00000";
+    public static String secretKey = "00000";
+    public static String specialKey = "00000";
 
     public static long timerDelay = 60000;
     public static Location location;
@@ -54,6 +61,8 @@ public class App extends Application {
     public static int gpsStatus = 0;
 
     public static Context targetContent;
+
+    public static TimeZone timeZone = TimeZone.getTimeZone("GMT+08:00");
 
     public static PrefDB prefDB = null;
     public static String FCM_TOKEN = "";

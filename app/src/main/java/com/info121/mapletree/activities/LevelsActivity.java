@@ -92,6 +92,7 @@ public class LevelsActivity extends AppCompatActivity {
 
 
     Dialog dialog;
+    Dialog progressDialog;
 
     int callCount = 0;
 
@@ -155,7 +156,7 @@ public class LevelsActivity extends AppCompatActivity {
 
     @OnClick(R.id.update)
     public void updateOnClick() {
-
+        showProgressDialog("Please wait. Submitting ...");
         callCount = 0;
 
         for (int i = 0; i < unitDetailList.size(); i++) {
@@ -170,7 +171,7 @@ public class LevelsActivity extends AppCompatActivity {
                 public void run() {
                     callUpdateUnits(unitDetailList.get(j), j);
                 }
-            }, 300);
+            }, 100);
 
         }
     }
@@ -186,7 +187,8 @@ public class LevelsActivity extends AppCompatActivity {
                 unit.getUnit(),
                 unit.getCode(),
                 unit.getName(),
-                unit.getStatus());
+                unit.getStatus(),
+                App.specialKey);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -234,6 +236,8 @@ public class LevelsActivity extends AppCompatActivity {
                     break;
                 }
 
+            progressDialog.dismiss();
+
             if (b)
                 showCustomAlertDialog("All shops in this level has been submitted successfully", true);
             else
@@ -243,6 +247,31 @@ public class LevelsActivity extends AppCompatActivity {
 
     }
 
+
+    private void showProgressDialog(String msg) {
+        progressDialog = new Dialog(mContext);
+
+        progressDialog.setContentView(R.layout.dialog_progress);
+        progressDialog.setTitle("");
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        progressDialog.setCancelable(false);
+
+        TextView message = progressDialog.findViewById(R.id.message);
+        message.setText(msg);
+
+        // resize dialog
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(progressDialog.getWindow().getAttributes());
+        lp.width = (int) (displayRectangle.width() * 0.85f);
+
+        progressDialog.show();
+        progressDialog.getWindow().setAttributes(lp);
+    }
 
     private void showCustomAlertDialog(String msg, final boolean finish) {
 
@@ -291,7 +320,9 @@ public class LevelsActivity extends AppCompatActivity {
 
 
     private void callGetLevels(final String round) {
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels(round);
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels(
+                round,
+                App.specialKey);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -338,7 +369,7 @@ public class LevelsActivity extends AppCompatActivity {
 
     private void callGetUnits(String level, String code) {
         mSwipeLayout.setRefreshing(true);
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUnits(level, code);
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUnits(level, code, App.specialKey);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
