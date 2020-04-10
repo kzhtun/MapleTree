@@ -10,5 +10,9 @@
         Please update on Google Playstore.
         Maple Tree system is now closing.</string>
 
+    <string name="message_no_connection">
+        There is an error connecting to the server. Please try again later.
+    </string>
+
 
 </resources>

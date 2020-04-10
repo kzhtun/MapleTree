@@ -8,36 +8,39 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class ObjectRes {
+	@SerializedName("IsUnderMaintenance")
+	@Expose
+	private String isUnderMaintenance;
 	@SerializedName("LevelDetails")
 	@Expose
-	public List<LevelDetail> levelDetails;
+	private List<LevelDetail> levelDetails;
 	@SerializedName("LevelNotCheckedDetails")
 	@Expose
-	public List<LevelDetail> levelNotCheckedDetails;
+	private List<LevelDetail> levelNotCheckedDetails;
 	@SerializedName("ProfileDetails")
 	@Expose
-	public ProfileDetails profileDetails;
+	private ProfileDetails profileDetails;
 	@SerializedName("RoundsDetails")
 	@Expose
-	public List<RoundsDetails> roundsDetails = null;
+	private List<RoundsDetails> roundsDetails = null;
 	@SerializedName("UnitDetails")
 	@Expose
-	public List<UnitDetail> unitDetails;
+	private List<UnitDetail> unitDetails;
 	@SerializedName("Version")
 	@Expose
-	public String version;
+	private String version;
 	@SerializedName("lastlogin")
 	@Expose
-	public String lastlogin;
+	private String lastlogin;
 	@SerializedName("responsemessage")
 	@Expose
-	public String responsemessage;
+	private String responsemessage;
 	@SerializedName("status")
 	@Expose
-	public String status;
+	private String status;
 	@SerializedName("token")
 	@Expose
-	public String token;
+	private String token;
 
 
 	public List<LevelDetail> getLevelDetails() {
@@ -119,4 +122,12 @@ public class ObjectRes {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
+    public String getIsUnderMaintenance() {
+        return isUnderMaintenance;
+    }
+
+    public void setIsUnderMaintenance(String isUnderMaintenance) {
+        this.isUnderMaintenance = isUnderMaintenance;
+    }
 }

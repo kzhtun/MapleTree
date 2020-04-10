@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -88,22 +89,30 @@ public class LoginActivity extends AbstractActivity {
 
         c = Calendar.getInstance(App.timeZone);
         df = new SimpleDateFormat("ddMMyyyy");
-        dfKey =  new SimpleDateFormat("ddMMyyyyHH", Locale.getDefault());
+        dfKey = new SimpleDateFormat("ddMMyyyyHH", Locale.getDefault());
         todayDate = df.format(c.getTime());
 
         String dd, mm, yyyy, hh;
 
-        dd = String.format("%02d", c.get(Calendar.DAY_OF_MONTH)) ;
-        mm = String.format("%02d", c.get(Calendar.MONTH) + 1) ;
+        dd = String.format("%02d", c.get(Calendar.DAY_OF_MONTH));
+        mm = String.format("%02d", c.get(Calendar.MONTH) + 1);
         yyyy = String.format("%04d", c.get(Calendar.YEAR));
         hh = String.format("%02d", c.get(Calendar.HOUR_OF_DAY));
 
         App.secretKey = "info121" + dd + mm + yyyy;
-        App.specialKey = Util.convertToSpecial("7" + dd + mm + yyyy + hh);
+        App.specialKey = Util.convertToSpecial(Util.getVersionCode(mContext) + dd + mm + yyyy + hh);
 
-        Log.e("Special Key : ",    App.specialKey );
+        Log.e("Special Key : ", App.specialKey);
 
         // mPassword.setText("info121");
+
+        callCheckVersion();
+
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+            ActivityCompat.finishAffinity(LoginActivity.this);
+        }
+
     }
 
 
@@ -162,21 +171,28 @@ public class LoginActivity extends AbstractActivity {
     }
 
     private void callCheckVersion() {
-//        Call<ObjectRes> call = RestClient.COACH().getApiService().CheckVersion(String.valueOf(Util.getVersionCode(mContext)));
-//
-//        call.enqueue(new Callback<ObjectRes>() {
-//            @Override
-//            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-//                if(response.body().getResponsemessage().equalsIgnoreCase("OUTDATED")) {
-//                    showOutdatedDialog();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ObjectRes> call, Throwable t) {
-//
-//            }
-//        });
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().checkUnderMaintenance();
+
+        call.enqueue(new Callback<ObjectRes>() {
+            @Override
+            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+                if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
+                    if (response.body().getIsUnderMaintenance().equalsIgnoreCase("YES")) {
+                        finish();
+                        startActivity(new Intent(LoginActivity.this, UnderMaintenanceActivity.class));
+                    }
+
+                    if (Integer.parseInt(response.body().getVersion()) != Util.getVersionCode(mContext)) {
+                        showOutdatedDialog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ObjectRes> call, Throwable t) {
+                showNoConnectionDialog();
+            }
+        });
     }
 
     private void callUpdateDevice() {
@@ -267,6 +283,8 @@ public class LoginActivity extends AbstractActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         finishAffinity();
+                        exitApp();
+
                     }
                 })
                 .setNegativeButton("Go to Play Store", new DialogInterface.OnClickListener() {
@@ -279,6 +297,35 @@ public class LoginActivity extends AbstractActivity {
                         } catch (android.content.ActivityNotFoundException anfe) {
                             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
                         }
+                    }
+                })
+                .create();
+
+
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    private void exitApp() {
+        Intent intent = new Intent(getApplicationContext(), UnderMaintenanceActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
+
+        ActivityCompat.finishAffinity(LoginActivity.this);
+    }
+
+    private void showNoConnectionDialog() {
+        AlertDialog dialog = new AlertDialog.Builder(mContext)
+                .setTitle(R.string.AppName)
+                .setMessage(R.string.message_no_connection)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finishAffinity();
+                        exitApp();
                     }
                 })
                 .create();

@@ -288,8 +288,8 @@ public class LevelsActivity extends AppCompatActivity {
         Button ok = dialog.findViewById(R.id.ok);
 
 
-        if(finish){
-            title.setTextColor(getResources().getColor( R.color.accept));
+        if (finish) {
+            title.setTextColor(getResources().getColor(R.color.accept));
             ok.setBackgroundResource(R.drawable.rounded_button_green);
         }
 
@@ -300,7 +300,7 @@ public class LevelsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
-                if(finish) finish();
+                if (finish) finish();
 
             }
         });
@@ -378,12 +378,12 @@ public class LevelsActivity extends AppCompatActivity {
                 unitDetailList = (List<UnitDetail>) response.body().getUnitDetails();
 
                 if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
-
                     mShopCount.setText(unitDetailList.size() + "");
 
                     unitAdapter.updateList(unitDetailList);
                     unitAdapter.notifyDataSetChanged();
                 }
+
             }
 
             @Override

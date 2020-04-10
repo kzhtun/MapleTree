@@ -33,7 +33,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".activities.LevelsActivity"></activity>
+        <activity android:name=".activities.UnderMaintenanceActivity" />
+        <activity android:name=".activities.LevelsActivity" />
         <activity android:name=".activities.ProfileActivity" />
 
         <service android:name=".services.FirebaseMessagingService">

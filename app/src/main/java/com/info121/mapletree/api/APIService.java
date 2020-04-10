@@ -9,6 +9,9 @@ import retrofit2.http.Path;
 
 public interface APIService {
 
+    @GET("checkundermaintenance")
+    Call<ObjectRes> checkUnderMaintenance();
+
 
     @GET("validateuser/{username},{password},{secretkey},{specialkey}")
     Call<ObjectRes> ValidateUser(@Path("username") String username, @Path("password") String password, @Path("secretkey") String secretkey, @Path("specialkey") String specialkey);
