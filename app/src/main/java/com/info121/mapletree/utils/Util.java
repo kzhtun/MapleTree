@@ -187,9 +187,22 @@ public class Util {
         return binary.toString();
     }
 
-    public static String convertToSpecial(String str)
+    public static String convertToSpecial(Context mContext)
     {
+        Calendar c;
+
+        c = Calendar.getInstance(App.timeZone);
+
+        String dd, mm, yyyy, hh;
+
+        dd = String.format("%02d", c.get(Calendar.DAY_OF_MONTH));
+        mm = String.format("%02d", c.get(Calendar.MONTH) + 1);
+        yyyy = String.format("%04d", c.get(Calendar.YEAR));
+        hh = String.format("%02d", c.get(Calendar.HOUR_OF_DAY));
+
         String ret = "";
+        String str = Util.getVersionCode(mContext) + dd + mm + yyyy + hh;
+
         for (char ch: str.toCharArray()) {
             ret = ret + convertChars (String.valueOf(ch));
         }

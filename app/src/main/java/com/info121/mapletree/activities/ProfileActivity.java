@@ -120,7 +120,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUserProfile(App.userName,
                 App.secretKey,
-                App.specialKey);
+                Util.convertToSpecial(mContext));
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override

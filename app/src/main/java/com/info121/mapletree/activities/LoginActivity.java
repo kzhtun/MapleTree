@@ -81,11 +81,8 @@ public class LoginActivity extends AbstractActivity {
             mRemember.setChecked(true);
         }
 
-        callCheckVersion();
-
         mApiVersion.setText("Api " + Util.getVersionCode(mContext));
         mUiVersion.setText("Ver " + Util.getVersionName(mContext));
-
 
         c = Calendar.getInstance(App.timeZone);
         df = new SimpleDateFormat("ddMMyyyy");
@@ -100,19 +97,17 @@ public class LoginActivity extends AbstractActivity {
         hh = String.format("%02d", c.get(Calendar.HOUR_OF_DAY));
 
         App.secretKey = "info121" + dd + mm + yyyy;
-        App.specialKey = Util.convertToSpecial(Util.getVersionCode(mContext) + dd + mm + yyyy + hh);
 
-        Log.e("Special Key : ", App.specialKey);
+        Log.e("Special Key : ", Util.convertToSpecial(mContext));
 
         // mPassword.setText("info121");
-
-        callCheckVersion();
 
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
             ActivityCompat.finishAffinity(LoginActivity.this);
         }
 
+        callCheckVersion();
     }
 
 
@@ -140,7 +135,7 @@ public class LoginActivity extends AbstractActivity {
                 mUserName.getText().toString().trim(),
                 mPassword.getText().toString().trim(),
                 App.secretKey,
-                App.specialKey
+                Util.convertToSpecial(mContext)
         );
 
         call.enqueue(new Callback<ObjectRes>() {

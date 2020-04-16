@@ -12,7 +12,6 @@ public interface APIService {
     @GET("checkundermaintenance")
     Call<ObjectRes> checkUnderMaintenance();
 
-
     @GET("validateuser/{username},{password},{secretkey},{specialkey}")
     Call<ObjectRes> ValidateUser(@Path("username") String username, @Path("password") String password, @Path("secretkey") String secretkey, @Path("specialkey") String specialkey);
 
@@ -31,14 +30,13 @@ public interface APIService {
     @GET("getUnits/{level},{code},{specialkey}")
     Call<ObjectRes> GetUnits(@Path("level") String level, @Path("code") String code, @Path("specialkey") String specialkey);
 
-
     //        1. roundcode
-//        2. block
-//        3. level
-//        4. unit
-//        5. tennantcode
-//        6. tennantname
-//        7. status
+    //        2. block
+    //        3. level
+    //        4. unit
+    //        5. tennantcode
+    //        6. tennantname
+    //        7. status
 
     @GET("saveUnit/{roundCode},{block},{level},{unit},{tenantcode},{tenantname},{status},{specialkey}")
     Call<ObjectRes> SaveUnits(@Path("roundCode") String roundCode,
@@ -49,7 +47,5 @@ public interface APIService {
                               @Path("tenantname") String tenantname,
                               @Path("status") String status,
                               @Path("specialkey") String specialkey);
-
-
 
 }

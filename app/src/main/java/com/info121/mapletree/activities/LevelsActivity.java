@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -90,11 +91,12 @@ public class LevelsActivity extends AppCompatActivity {
     String mRoundCode = "";
     String mRoundName = "";
 
-
     Dialog dialog;
     Dialog progressDialog;
+    ProgressBar progressBar;
 
     int callCount = 0;
+    int unitIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,13 +153,27 @@ public class LevelsActivity extends AppCompatActivity {
         // set login info
         mLoginAs.setText("Welcome " + App.userName);
 
+//        showProgressDialog("Progress Test");
+//
+//        progressBar.setMax(100);
+//
+//        for (int i = 0; i < 100 ; i++) {
+//            final int j = i;
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    progressBar.setProgress(j);
+//                }
+//            }, 5000);
+//
+//        }
+
     }
 
 
     @OnClick(R.id.update)
     public void updateOnClick() {
         showProgressDialog("Please wait. Submitting ...");
-        callCount = 0;
 
         for (int i = 0; i < unitDetailList.size(); i++) {
             unitDetailList.get(i).setProgress("P");
@@ -171,9 +187,76 @@ public class LevelsActivity extends AppCompatActivity {
                 public void run() {
                     callUpdateUnits(unitDetailList.get(j), j);
                 }
-            }, 100);
+            }, 200);
 
         }
+    }
+
+//    @OnClick(R.id.update)
+//    public void updateOnClick() {
+//        showProgressDialog("Please wait. Submitting ...");
+//
+//        for (int i = 0; i < unitDetailList.size(); i++) {
+//            unitDetailList.get(i).setProgress("P");
+//            unitAdapter.notifyDataSetChanged();
+//        }
+//
+//        for (int i = 0; i < unitDetailList.size(); i++) {
+//            final int j = i;
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    callUpdateUnitsSync( j);
+//                }
+//            }, 100);
+//
+//        }
+//    }
+
+
+    private void callUpdateUnitsSync(final int index) {
+        final UnitDetail unit = unitDetailList.get(index);
+
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().SaveUnits(mRoundCode,
+                unit.getBlock(),
+                unit.getLevel(),
+                unit.getUnit(),
+                unit.getCode(),
+                unit.getName(),
+                unit.getStatus(),
+                Util.convertToSpecial(mContext));
+
+
+        call.enqueue(new Callback<ObjectRes>() {
+            @Override
+            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+                if (response.body() != null)
+                    if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
+                        Log.e("Update ", index + " : " + unit.getName() + " ----OK ");
+                        unitDetailList.get(index).setProgress("S");
+                        unitAdapter.notifyDataSetChanged();
+
+                        callUpdateUnitsSync(unitIndex++);
+
+                    } else {
+                        Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
+                        unitDetailList.get(index).setProgress("F");
+                        unitAdapter.notifyDataSetChanged();
+                    }
+
+                checkAndShowMessage();
+            }
+
+            @Override
+            public void onFailure(Call<ObjectRes> call, Throwable t) {
+                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail ");
+                unitDetailList.get(index).setProgress("F");
+                unitAdapter.notifyDataSetChanged();
+
+                checkAndShowMessage();
+
+            }
+        });
     }
 
     private void callUpdateUnits(final UnitDetail unit, final int index) {
@@ -188,7 +271,9 @@ public class LevelsActivity extends AppCompatActivity {
                 unit.getCode(),
                 unit.getName(),
                 unit.getStatus(),
-                App.specialKey);
+                Util.convertToSpecial(mContext));
+
+
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -210,7 +295,7 @@ public class LevelsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ObjectRes> call, Throwable t) {
-                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail ");
+                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail " + t.getMessage());
                 unitDetailList.get(index).setProgress("F");
                 unitAdapter.notifyDataSetChanged();
 
@@ -247,7 +332,6 @@ public class LevelsActivity extends AppCompatActivity {
 
     }
 
-
     private void showProgressDialog(String msg) {
         progressDialog = new Dialog(mContext);
 
@@ -257,7 +341,9 @@ public class LevelsActivity extends AppCompatActivity {
 
         progressDialog.setCancelable(false);
 
+       // progressBar = progressDialog.findViewById(R.id.progress);
         TextView message = progressDialog.findViewById(R.id.message);
+
         message.setText(msg);
 
         // resize dialog
@@ -322,7 +408,7 @@ public class LevelsActivity extends AppCompatActivity {
     private void callGetLevels(final String round) {
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels(
                 round,
-                App.specialKey);
+                Util.convertToSpecial(mContext));
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -366,10 +452,9 @@ public class LevelsActivity extends AppCompatActivity {
         });
     }
 
-
     private void callGetUnits(String level, String code) {
         mSwipeLayout.setRefreshing(true);
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUnits(level, code, App.specialKey);
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetUnits(level, code, Util.convertToSpecial(mContext));
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override

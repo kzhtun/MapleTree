@@ -247,7 +247,7 @@ public class RoundsActivity extends AppCompatActivity {
 
     private void callGetRoundsApi() {
 
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetRounds(App.specialKey);
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetRounds(Util.convertToSpecial(mContext));
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override

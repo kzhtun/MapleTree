@@ -93,7 +93,7 @@ public class RoundAdapter extends RecyclerView.Adapter<RoundAdapter.ViewHolder> 
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetNotCheckedLevels(
                 roundsDetailsList.get(i).getCode(),
-                App.specialKey);
+                Util.convertToSpecial(mContext));
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
