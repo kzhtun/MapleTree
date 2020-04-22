@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -100,7 +101,7 @@ public class LoginActivity extends AbstractActivity {
 
         Log.e("Special Key : ", Util.convertToSpecial(mContext));
 
-        // mPassword.setText("info121");
+
 
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
@@ -108,6 +109,11 @@ public class LoginActivity extends AbstractActivity {
         }
 
         callCheckVersion();
+
+        //TODO: remove predefined password
+      //  mPassword.setText("info121");
+
+
     }
 
 
@@ -196,8 +202,6 @@ public class LoginActivity extends AbstractActivity {
         Log.e("DEVICE TYPE ", App.DEVICE_TYPE);
         Log.e("FCM TOKEN", App.FCM_TOKEN);
         Log.e("====", "=========================================");
-
-
     }
 
     private void loginSuccessful() {
@@ -330,4 +334,7 @@ public class LoginActivity extends AbstractActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
+
+
+
 }

@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,6 +95,11 @@ public class LevelsActivity extends AppCompatActivity {
     Dialog dialog;
     Dialog progressDialog;
     ProgressBar progressBar;
+    TextView progressMessage;
+
+    String savingAction = "CONTINUE";
+
+    //boolean test = false;
 
     int callCount = 0;
     int unitIndex = 0;
@@ -138,7 +144,7 @@ public class LevelsActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
 
-        unitAdapter = new UnitAdapter(mContext, unitDetailList);
+        unitAdapter = new UnitAdapter(mContext, unitDetailList, getScreenSize());
         mRecyclerView.setAdapter(unitAdapter);
 //
 //        mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -171,27 +177,6 @@ public class LevelsActivity extends AppCompatActivity {
     }
 
 
-    @OnClick(R.id.update)
-    public void updateOnClick() {
-        showProgressDialog("Please wait. Submitting ...");
-
-        for (int i = 0; i < unitDetailList.size(); i++) {
-            unitDetailList.get(i).setProgress("P");
-            unitAdapter.notifyDataSetChanged();
-        }
-
-        for (int i = 0; i < unitDetailList.size(); i++) {
-            final int j = i;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    callUpdateUnits(unitDetailList.get(j), j);
-                }
-            }, 200);
-
-        }
-    }
-
 //    @OnClick(R.id.update)
 //    public void updateOnClick() {
 //        showProgressDialog("Please wait. Submitting ...");
@@ -206,16 +191,38 @@ public class LevelsActivity extends AppCompatActivity {
 //            new Handler().postDelayed(new Runnable() {
 //                @Override
 //                public void run() {
-//                    callUpdateUnitsSync( j);
+//                    callUpdateUnits(unitDetailList.get(j), j);
 //                }
-//            }, 100);
+//            }, 200);
 //
 //        }
 //    }
 
+    @OnClick(R.id.update)
+    public void updateOnClick() {
+        showActualProgressDialog("Please wait. Submitting ...");
+
+        for (int i = 0; i < unitDetailList.size(); i++) {
+            unitDetailList.get(i).setProgress("P");
+            unitAdapter.notifyDataSetChanged();
+        }
+
+        unitIndex = 0;
+        progressBar.setProgress(0);
+        progressBar.setMax(unitDetailList.size());
+        callUpdateUnitsSync(unitIndex);
+    }
+
 
     private void callUpdateUnitsSync(final int index) {
         final UnitDetail unit = unitDetailList.get(index);
+
+        progressMessage.setText((index + 1) + ". " + unit.getName());
+        progressBar.setProgress(index);
+
+//        //TODO: remove testing code
+//        if(unitIndex == 2 && !test)
+//            unit.setName("/");
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().SaveUnits(mRoundCode,
                 unit.getBlock(),
@@ -224,8 +231,13 @@ public class LevelsActivity extends AppCompatActivity {
                 unit.getCode(),
                 unit.getName(),
                 unit.getStatus(),
-                Util.convertToSpecial(mContext));
-
+                Util.convertToSpecial(mContext),
+                (unit.getRemarks().length() > 0) ? unit.getRemarks() : "-",
+                (unit.getShopreason().length() > 0) ? unit.getShopreason() : "-",
+//                unit.getRemarks(),
+//                unit.getShopreason(),
+                unit.getShowremarks(),
+                App.userName);
 
         call.enqueue(new Callback<ObjectRes>() {
             @Override
@@ -236,15 +248,36 @@ public class LevelsActivity extends AppCompatActivity {
                         unitDetailList.get(index).setProgress("S");
                         unitAdapter.notifyDataSetChanged();
 
-                        callUpdateUnitsSync(unitIndex++);
+                        if(savingAction == "CANCEL")
+                            savingAction = "CONTINUE";
+
+                        if (savingAction == "CONTINUE")
+                            if (unitIndex < unitDetailList.size() - 1) {
+                                callUpdateUnitsSync(++unitIndex);
+                            } else {
+                                if (progressDialog.isShowing())
+                                    progressDialog.dismiss();
+
+                                showCustomAlertDialog("All shops in this level has been submitted successfully", true);
+                            }
 
                     } else {
                         Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
                         unitDetailList.get(index).setProgress("F");
                         unitAdapter.notifyDataSetChanged();
-                    }
 
-                checkAndShowMessage();
+                       // showCustomAlertDialog("Error in submitting " + unitDetailList.get(index) + ". Please re-submit again", false);
+                        progressDialog.dismiss();
+                        showRetryDialog("There was an error encountered sending this shop.");
+                    }
+                else{
+                    Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
+                    unitDetailList.get(index).setProgress("F");
+                    unitAdapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
+                    showRetryDialog("There was an error encountered sending this shop.");
+                }
+                //  checkAndShowMessage();
             }
 
             @Override
@@ -253,57 +286,60 @@ public class LevelsActivity extends AppCompatActivity {
                 unitDetailList.get(index).setProgress("F");
                 unitAdapter.notifyDataSetChanged();
 
-                checkAndShowMessage();
+                progressDialog.dismiss();
+                showRetryDialog("There was an error encountered sending this shop.");
 
             }
         });
     }
 
-    private void callUpdateUnits(final UnitDetail unit, final int index) {
-
-        // testing faliure
-        //if (index == 9) unit.setUnit("ab/cc/dd");
-
-        Call<ObjectRes> call = RestClient.MAPLE().getApiService().SaveUnits(mRoundCode,
-                unit.getBlock(),
-                unit.getLevel(),
-                unit.getUnit(),
-                unit.getCode(),
-                unit.getName(),
-                unit.getStatus(),
-                Util.convertToSpecial(mContext));
-
-
-
-        call.enqueue(new Callback<ObjectRes>() {
-            @Override
-            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
-                if (response.body() != null)
-                    if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
-                        Log.e("Update ", index + " : " + unit.getName() + " ----OK ");
-                        unitDetailList.get(index).setProgress("S");
-                        unitAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
-                        unitDetailList.get(index).setProgress("F");
-                        unitAdapter.notifyDataSetChanged();
-                    }
-
-                checkAndShowMessage();
-
-            }
-
-            @Override
-            public void onFailure(Call<ObjectRes> call, Throwable t) {
-                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail " + t.getMessage());
-                unitDetailList.get(index).setProgress("F");
-                unitAdapter.notifyDataSetChanged();
-
-                checkAndShowMessage();
-
-            }
-        });
-    }
+//    private void callUpdateUnits(final UnitDetail unit, final int index) {
+//
+//        // testing faliure
+//        //if (index == 9) unit.setUnit("ab/cc/dd");
+//
+//        Call<ObjectRes> call = RestClient.MAPLE().getApiService().SaveUnits(mRoundCode,
+//                unit.getBlock(),
+//                unit.getLevel(),
+//                unit.getUnit(),
+//                unit.getCode(),
+//                unit.getName(),
+//                unit.getStatus(),
+//                Util.convertToSpecial(mContext),
+//                (unit.getRemarks().length()>0) ? unit.getRemarks() : "-",
+//                (unit.getShopreason().length()>0) ? unit.getShopreason() : "-",
+//                unit.getShowremarks(),
+//                App.userName);
+//
+//
+//        call.enqueue(new Callback<ObjectRes>() {
+//            @Override
+//            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+//                if (response.body() != null)
+//                    if (response.body().getResponsemessage().equalsIgnoreCase("Success")) {
+//                        Log.e("Update ", index + " : " + unit.getName() + " ----OK ");
+//                        unitDetailList.get(index).setProgress("S");
+//                        unitAdapter.notifyDataSetChanged();
+//                    } else {
+//                        Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
+//                        unitDetailList.get(index).setProgress("F");
+//                        unitAdapter.notifyDataSetChanged();
+//                    }
+//
+//                checkAndShowMessage();
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ObjectRes> call, Throwable t) {
+//                Log.e("Update ", index + " : " + unit.getName() + " ---- Call Fail " + t.getMessage());
+//                unitDetailList.get(index).setProgress("F");
+//                unitAdapter.notifyDataSetChanged();
+//
+//                checkAndShowMessage();
+//
+//            }
+//        });
+//    }
 
     private void checkAndShowMessage() {
         Boolean b = true;
@@ -341,10 +377,72 @@ public class LevelsActivity extends AppCompatActivity {
 
         progressDialog.setCancelable(false);
 
-       // progressBar = progressDialog.findViewById(R.id.progress);
+        // progressBar = progressDialog.findViewById(R.id.progress);
         TextView message = progressDialog.findViewById(R.id.message);
 
         message.setText(msg);
+
+        // resize dialog
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(progressDialog.getWindow().getAttributes());
+        lp.width = (int) (displayRectangle.width() * 0.85f);
+
+        progressDialog.show();
+        progressDialog.getWindow().setAttributes(lp);
+    }
+
+    private void showActualProgressDialog(String msg) {
+        progressDialog = new Dialog(mContext);
+
+        progressDialog.setContentView(R.layout.dialog_horizontal_progress);
+        progressDialog.setTitle("");
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        progressDialog.setCancelable(false);
+
+        progressBar = progressDialog.findViewById(R.id.progress_bar);
+        progressMessage = progressDialog.findViewById(R.id.message);
+        Button cancel = progressDialog.findViewById(R.id.cancel);
+        final Button pause = progressDialog.findViewById(R.id.pause);
+
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                progressDialog.dismiss();
+                savingAction = "CANCEL";
+            }
+        });
+
+        pause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+              //  progressDialog.dismiss();
+
+                if (pause.getText().toString().equalsIgnoreCase("PAUSE")) {
+                    savingAction = "PAUSE";
+
+                    // button change
+                    pause.setText("CONTINUE");
+                    pause.setBackgroundResource(R.drawable.rounded_button_green);
+                } else {
+                    savingAction = "CONTINUE";
+
+                    callUpdateUnitsSync(++unitIndex);
+
+                    // button change
+                    pause.setText("PAUSE");
+                    pause.setBackgroundResource(R.drawable.rounded_button_default);
+                }
+            }
+        });
+
+
+        progressMessage.setText(msg);
 
         // resize dialog
         Rect displayRectangle = new Rect();
@@ -404,6 +502,60 @@ public class LevelsActivity extends AppCompatActivity {
         dialog.getWindow().setAttributes(lp);
     }
 
+    private void showRetryDialog(String msg) {
+
+        Log.e("Show Dialog", "..");
+
+        dialog = new Dialog(mContext);
+
+        dialog.setContentView(R.layout.dialog_retry);
+        dialog.setTitle("");
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView title = dialog.findViewById(R.id.title);
+        TextView message = dialog.findViewById(R.id.message);
+        Button cancel = dialog.findViewById(R.id.cancel);
+        Button retry = dialog.findViewById(R.id.retry);
+
+        title.setText("MAPLETREE");
+        message.setText(msg);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+                showActualProgressDialog("Retry submitting ...");
+
+//                //TODO: remove testing code
+//                if(unitIndex == 2) {
+//                    unitDetailList.get(unitIndex).setName("Secret Recipe");
+//                    test = true;
+//                }
+
+                callUpdateUnitsSync(unitIndex);
+            }
+        });
+
+
+        // resize dialog
+        Rect displayRectangle = new Rect();
+        Window window = getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(displayRectangle);
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.width = (int) (displayRectangle.width() * 0.85f);
+
+        dialog.show();
+        dialog.getWindow().setAttributes(lp);
+    }
 
     private void callGetLevels(final String round) {
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().GetLevels(
@@ -499,6 +651,40 @@ public class LevelsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public int getScreenSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+        float widthDpi = metrics.xdpi;
+        float heightDpi = metrics.ydpi;
+
+        int widthPixels = metrics.widthPixels;
+        int heightPixels = metrics.heightPixels;
+
+        float widthInches = widthPixels / widthDpi;
+        float heightInches = heightPixels / heightDpi;
+
+        //The size of the diagonal in inches is equal to the square root of the height in inches squared plus the width in inches squared.
+        double diagonalInches = Math.sqrt(
+                (widthInches * widthInches)
+                        + (heightInches * heightInches));
+
+
+        if (diagonalInches >= 10) {
+            //Device is a 10" tablet
+            Log.e("Screen Size : ", "Tablet 10");
+            return 10;
+        } else if (diagonalInches >= 7) {
+            //Device is a 7" tablet
+            Log.e("Screen Size : ", "Tablet 7");
+            return 7;
+        } else {
+            // Mobile
+            Log.e("Screen Size : ", "Mobile");
+            return 0;
+        }
     }
 
 }

@@ -4,6 +4,18 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UnitDetail {
+    @SerializedName("remarks")
+    @Expose
+    public String remarks;
+
+    @SerializedName("shopreason")
+    @Expose
+    public String shopreason;
+
+    @SerializedName("showremarks")
+    @Expose
+    public String showremarks;
+
     @SerializedName("block")
     @Expose
     public String block;
@@ -90,5 +102,29 @@ public class UnitDetail {
 
     public void setProgress(String progress) {
         this.progress = progress;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getShopreason() {
+        return shopreason;
+    }
+
+    public void setShopreason(String shopreason) {
+        this.shopreason = shopreason;
+    }
+
+    public String getShowremarks() {
+        return showremarks;
+    }
+
+    public void setShowremarks(String showremarks) {
+        this.showremarks = showremarks;
     }
 }

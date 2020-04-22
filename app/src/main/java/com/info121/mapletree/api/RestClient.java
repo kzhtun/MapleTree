@@ -40,7 +40,7 @@ public class RestClient {
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(App.CONST_REST_API_URL)
                 .client(new OkHttpClient().newBuilder()
-                        .protocols(Util.immutableList(Protocol.HTTP_1_1))
+                      //  .protocols(Util.immutableList(Protocol.HTTP_1_1))
                         .addInterceptor(new Interceptor() {
                             @Override
                             public Response intercept(Chain chain) throws IOException {

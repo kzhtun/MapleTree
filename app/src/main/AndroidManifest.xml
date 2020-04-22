@@ -34,7 +34,7 @@
         android:theme="@style/AppTheme"
         tools:replace="android:allowBackup">
         <activity android:name=".activities.UnderMaintenanceActivity" />
-        <activity android:name=".activities.LevelsActivity" />
+        <activity android:name=".activities.LevelsActivity" android:screenOrientation="portrait" />
         <activity android:name=".activities.ProfileActivity" />
 
         <service android:name=".services.FirebaseMessagingService">
@@ -44,7 +44,7 @@
         </service>
         <service android:name=".services.SmartLocationService" />
 
-        <activity android:name=".activities.RoundsActivity" />
+        <activity android:name=".activities.RoundsActivity" android:screenOrientation="portrait"/>
         <activity android:name=".activities.ToneSelection" />
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.MainActivity">

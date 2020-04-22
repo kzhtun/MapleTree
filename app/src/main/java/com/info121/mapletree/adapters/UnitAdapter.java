@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,16 +55,16 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
 
     private int lastPosition = -1;
     Context mContext;
+    int mScreenSize;
     static List<UnitDetail> unitDetailList = new ArrayList<>();
-   // List<Boolean> shopStatusList = new ArrayList<>();
+    // List<Boolean> shopStatusList = new ArrayList<>();
 
-    SparseBooleanArray itemStateArray= new SparseBooleanArray();
+    SparseBooleanArray itemStateArray = new SparseBooleanArray();
 
-    public UnitAdapter(Context context, List<UnitDetail> unitDetailList) {
+    public UnitAdapter(Context context, List<UnitDetail> unitDetailList, int screenSize) {
         this.mContext = context;
         this.unitDetailList = unitDetailList;
-
-
+        this.mScreenSize = screenSize;
     }
 
     public void updateList(List<UnitDetail> list) {
@@ -77,9 +79,12 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         mContext = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(mContext);
-
+        View promotionView;
         // Inflate the custom layout
-        View promotionView = inflater.inflate(R.layout.cell_unit, parent, false);
+        if (mScreenSize == 0)
+            promotionView = inflater.inflate(R.layout.cell_unit, parent, false);
+        else
+            promotionView = inflater.inflate(R.layout.cell_unit_tablet, parent, false);
 
         // Return a new holder instance
         return new ViewHolder(promotionView);
@@ -107,9 +112,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
             viewHolder.shopStatus.setTextColor(Color.parseColor("#FF1400"));
         }
 
- //       itemStateArray.put(i, (unitDetailList.get(i).getStatus().equalsIgnoreCase("OPEN"))? true : false);
-
-
+        //       itemStateArray.put(i, (unitDetailList.get(i).getStatus().equalsIgnoreCase("OPEN"))? true : false);
 
 
 //        //if(itemStateArray.get(i)){
@@ -122,11 +125,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
 //            viewHolder.shopStatus.setText("OPEN");
 //            viewHolder.shopStatus.setTextColor(mContext.getResources().getColor(R.color.dark_green));
 //        }
-
-
-
-
-
 
 
 //        viewHolder.shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -167,6 +165,23 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
             viewHolder.failed.setVisibility(View.GONE);
             viewHolder.progressBar.setVisibility(View.GONE);
         }
+
+        if(unitDetailList.get(i).getShopreason().length() > 0)
+        viewHolder.reason.setText(unitDetailList.get(i).getShopreason());
+        else
+            viewHolder.reason.setVisibility(View.GONE);
+
+        if (unitDetailList.get(i).getShowremarks().equals("0")) {
+           // viewHolder.layoutRemark.setVisibility(View.GONE);
+            viewHolder.remark.setVisibility(View.GONE);
+        } else {
+           // viewHolder.layoutRemark.setVisibility(View.VISIBLE);
+            viewHolder.remark.setVisibility(View.VISIBLE);
+
+
+            viewHolder.remark.setText(unitDetailList.get(i).getRemarks());
+        }
+
     }
 
     @Override
@@ -212,6 +227,15 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
         @BindView(R.id.failed)
         ImageView failed;
 
+        @BindView(R.id.shop_reason)
+        TextView reason;
+
+        @BindView(R.id.shop_remark)
+        TextView remark;
+
+        @BindView(R.id.layout_remark)
+        LinearLayout layoutRemark;
+
         CheckedChangeListener checkChangeListener;
 
         public ViewHolder(@NonNull View itemView) {
@@ -221,7 +245,7 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
             this.setIsRecyclable(false);
 
 
-           shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            shopSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
@@ -237,7 +261,6 @@ public class UnitAdapter extends RecyclerView.Adapter<UnitAdapter.ViewHolder> {
                 }
             });
         }
-
 
 
     }

@@ -38,7 +38,7 @@ public interface APIService {
     //        6. tennantname
     //        7. status
 
-    @GET("saveUnit/{roundCode},{block},{level},{unit},{tenantcode},{tenantname},{status},{specialkey}")
+    @GET("saveUnit/{roundCode},{block},{level},{unit},{tenantcode},{tenantname},{status},{specialkey},{remarks},{shopreason},{showremarks},{user}")
     Call<ObjectRes> SaveUnits(@Path("roundCode") String roundCode,
                               @Path("block") String block,
                               @Path("level") String level,
@@ -46,6 +46,10 @@ public interface APIService {
                               @Path("tenantcode") String tenantcode,
                               @Path("tenantname") String tenantname,
                               @Path("status") String status,
-                              @Path("specialkey") String specialkey);
+                              @Path("specialkey") String specialkey,
+                              @Path("remarks") String remarks,
+                              @Path("shopreason") String shopreason,
+                              @Path("showremarks") String showremarks,
+                              @Path("user") String user);
 
 }

@@ -32,7 +32,6 @@
                     style="@style/dialog_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
                     android:text="MAPLETREE" />
             </LinearLayout>
         </LinearLayout>
@@ -54,19 +53,32 @@
             android:id="@+id/update_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+           android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/ok"
+                android:id="@+id/cancel"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_gravity="center"
-                android:layout_weight="1"
+                android:layout_height="32dp"
+                android:background="@drawable/rounded_button_default"
                 android:textColor="@color/white"
-                android:background="@drawable/rounded_button_orange"
-                android:text="OK" />
+                android:textSize="12sp"
+                android:layout_marginRight="3dp"
+                android:letterSpacing="0.1"
+                android:layout_weight="1"
+                android:text="CANCEL" />
 
+            <Button
+                android:id="@+id/retry"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:background="@drawable/rounded_button_green"
+                android:textColor="@color/white"
+                android:layout_marginLeft="3dp"
+                android:letterSpacing="0.1"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:text="RETRY" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>
