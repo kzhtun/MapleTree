@@ -39,6 +39,7 @@ import com.info121.mapletree.models.LevelDetail;
 import com.info121.mapletree.models.ObjectRes;
 import com.info121.mapletree.models.RoundsDetails;
 import com.info121.mapletree.models.UnitDetail;
+import com.info121.mapletree.utils.PrefDB;
 import com.info121.mapletree.utils.Util;
 
 import java.text.SimpleDateFormat;
@@ -92,6 +93,8 @@ public class LevelsActivity extends AppCompatActivity {
     String mRoundCode = "";
     String mRoundName = "";
 
+    PrefDB prefDB;
+
     Dialog dialog;
     Dialog progressDialog;
     ProgressBar progressBar;
@@ -99,7 +102,7 @@ public class LevelsActivity extends AppCompatActivity {
 
     String savingAction = "CONTINUE";
 
-    //boolean test = false;
+    boolean test = false;
 
     int callCount = 0;
     int unitIndex = 0;
@@ -110,6 +113,8 @@ public class LevelsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_levels);
 
         ButterKnife.bind(this);
+
+        prefDB = new PrefDB(getApplicationContext());
 
         // set toolbar
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -207,6 +212,8 @@ public class LevelsActivity extends AppCompatActivity {
             unitAdapter.notifyDataSetChanged();
         }
 
+        savingAction = "CONTINUE";
+
         unitIndex = 0;
         progressBar.setProgress(0);
         progressBar.setMax(unitDetailList.size());
@@ -248,9 +255,6 @@ public class LevelsActivity extends AppCompatActivity {
                         unitDetailList.get(index).setProgress("S");
                         unitAdapter.notifyDataSetChanged();
 
-                        if(savingAction == "CANCEL")
-                            savingAction = "CONTINUE";
-
                         if (savingAction == "CONTINUE")
                             if (unitIndex < unitDetailList.size() - 1) {
                                 callUpdateUnitsSync(++unitIndex);
@@ -261,7 +265,11 @@ public class LevelsActivity extends AppCompatActivity {
                                 showCustomAlertDialog("All shops in this level has been submitted successfully", true);
                             }
 
-                    } else {
+                        // session expired
+                    }else if(response.body().getResponsemessage().equalsIgnoreCase("Bad Token")){
+                        refreshToken();
+                        // fail
+                    }else{
                         Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
                         unitDetailList.get(index).setProgress("F");
                         unitAdapter.notifyDataSetChanged();
@@ -269,14 +277,13 @@ public class LevelsActivity extends AppCompatActivity {
                        // showCustomAlertDialog("Error in submitting " + unitDetailList.get(index) + ". Please re-submit again", false);
                         progressDialog.dismiss();
                         showRetryDialog("There was an error encountered sending this shop.");
+                    }else{
+                        Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
+                        unitDetailList.get(index).setProgress("F");
+                        unitAdapter.notifyDataSetChanged();
+                        progressDialog.dismiss();
+                        showRetryDialog("There was an error encountered sending this shop.");
                     }
-                else{
-                    Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
-                    unitDetailList.get(index).setProgress("F");
-                    unitAdapter.notifyDataSetChanged();
-                    progressDialog.dismiss();
-                    showRetryDialog("There was an error encountered sending this shop.");
-                }
                 //  checkAndShowMessage();
             }
 
@@ -415,6 +422,7 @@ public class LevelsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 progressDialog.dismiss();
                 savingAction = "CANCEL";
+
             }
         });
 
@@ -593,7 +601,7 @@ public class LevelsActivity extends AppCompatActivity {
                     });
 
                 } else {
-                    Toast.makeText(mContext, "Error in getting profile detial", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Error in getting level detail", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -685,6 +693,31 @@ public class LevelsActivity extends AppCompatActivity {
             Log.e("Screen Size : ", "Mobile");
             return 0;
         }
+    }
+
+    private void refreshToken() {
+
+        Call<ObjectRes> call = RestClient.MAPLE().getApiService().ValidateUser(
+                prefDB.getString(App.TEMP_UID),
+                prefDB.getString(App.TEMP_PSW),
+                App.secretKey,
+                Util.convertToSpecial(mContext)
+        );
+
+        call.enqueue(new Callback<ObjectRes>() {
+            @Override
+            public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
+                if (response.body().getResponsemessage().equalsIgnoreCase("Valid")) {
+                    App.authToken = response.body().getToken();
+                    callUpdateUnitsSync(unitIndex);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ObjectRes> call, Throwable t) {
+                Log.e("Failed", t.getMessage());
+            }
+        });
     }
 
 }

@@ -30,17 +30,22 @@ public class App extends Application {
     public static String DEVICE_TYPE = "ANDROID";
     String TAG = "Application";
 
-
-
     //LIVE
  //  public static String CONST_REST_API_URL = "https://vivocityservicemgt.vivocity.com.sg/restapimapletree/MyLimoService.svc/";
 
    //DEV
-   public static String CONST_REST_API_URL = "http://info121.sytes.net:81/restapimapletree/MyLimoService.svc/";
+ // public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
+
+    //DEV
+   public static String CONST_REST_API_URL = "http://121.7.127.6:82/restapimapletree/mylimoservice.svc/";
 
 
 //    public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
 //    public static String CONST_PHOTO_URL = "http://alexisinfo121.noip.me/IOPS/images/mycoachpics/";
+
+
+    public static String TEMP_UID = "TEMP_UID";
+    public static String TEMP_PSW = "TEMP_PSW";
 
     public static String CONST_USER_NAME = "USER_NAME";
     public static String CONST_ALREADY_LOGIN = "ALREADY_LOGIN";
@@ -81,8 +86,6 @@ public class App extends Application {
 
 
     public static String test = "";
-
-
 
 
     // mcts server "124.6.61.70"

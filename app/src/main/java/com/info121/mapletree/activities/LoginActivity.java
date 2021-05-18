@@ -101,18 +101,20 @@ public class LoginActivity extends AbstractActivity {
 
         Log.e("Special Key : ", Util.convertToSpecial(mContext));
 
-
-
         if (getIntent().getBooleanExtra("EXIT", false)) {
             finish();
             ActivityCompat.finishAffinity(LoginActivity.this);
         }
-
-        callCheckVersion();
+        //TODO: unComment When Release
+        //  callCheckVersion();
 
         //TODO: remove predefined password
-      //  mPassword.setText("info121");
+//        mUserName.setText("guard1");
+//        mPassword.setText("password1");
 
+
+        Log.e("Secret Key : " ,  App.secretKey);
+        Log.e("Mobile Key : ", Util.convertToSpecial(mContext));
 
     }
 
@@ -136,7 +138,6 @@ public class LoginActivity extends AbstractActivity {
     }
 
     private void callValidateUser() {
-
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().ValidateUser(
                 mUserName.getText().toString().trim(),
                 mPassword.getText().toString().trim(),
@@ -167,8 +168,6 @@ public class LoginActivity extends AbstractActivity {
                 Log.e("Failed", t.getMessage());
             }
         });
-
-
     }
 
     private void callCheckVersion() {
@@ -207,10 +206,12 @@ public class LoginActivity extends AbstractActivity {
     private void loginSuccessful() {
         mProgressBar.setVisibility(View.GONE);
 
-
-        // instantiate wiht new Token
+        // instantiate with new Token
         //RestClient.Dismiss();
 
+        // save to local
+        prefDB.putString(App.TEMP_UID, mUserName.getText().toString());
+        prefDB.putString(App.TEMP_PSW, mPassword.getText().toString());
 
         prefDB.putString(App.CONST_USER_NAME, App.userName);
         prefDB.putString(App.CONST_DEVICE_ID, App.deviceID);
@@ -334,7 +335,6 @@ public class LoginActivity extends AbstractActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
     }
-
 
 
 }
