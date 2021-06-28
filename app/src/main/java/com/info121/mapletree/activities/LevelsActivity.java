@@ -267,7 +267,7 @@ public class LevelsActivity extends AppCompatActivity {
 
                         // session expired
                     }else if(response.body().getResponsemessage().equalsIgnoreCase("Bad Token")){
-                        refreshToken();
+                        refreshToken("UPDATE_UNIT");
                         // fail
                     }else{
                         Log.e("Update ", index + " : " + unit.getName() + " ---- Saving Fail");
@@ -627,6 +627,8 @@ public class LevelsActivity extends AppCompatActivity {
 
                     unitAdapter.updateList(unitDetailList);
                     unitAdapter.notifyDataSetChanged();
+                }else if(response.body().getResponsemessage().equalsIgnoreCase("Bad Token")){
+                    refreshToken("GET_UNIT");
                 }
 
             }
@@ -695,7 +697,7 @@ public class LevelsActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshToken() {
+    private void refreshToken(final String action) {
 
         Call<ObjectRes> call = RestClient.MAPLE().getApiService().ValidateUser(
                 prefDB.getString(App.TEMP_UID),
@@ -709,7 +711,13 @@ public class LevelsActivity extends AppCompatActivity {
             public void onResponse(Call<ObjectRes> call, Response<ObjectRes> response) {
                 if (response.body().getResponsemessage().equalsIgnoreCase("Valid")) {
                     App.authToken = response.body().getToken();
-                    callUpdateUnitsSync(unitIndex);
+
+                    if(action.equalsIgnoreCase("UPDATE_UNIT"))
+                        callUpdateUnitsSync(unitIndex);
+
+                    if(action.equalsIgnoreCase("GET_UNIT"))
+                      //  Log.e("LEVEL ", mLevel.getSelectedItem().toString());
+                        callGetUnits(mLevel.getSelectedItem().toString(), mRoundCode);
                 }
             }
 

@@ -37,7 +37,7 @@ public class App extends Application {
  // public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
 
     //DEV
-   public static String CONST_REST_API_URL = "http://121.7.127.6:82/restapimapletree/mylimoservice.svc/";
+   public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
 
 
 //    public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";

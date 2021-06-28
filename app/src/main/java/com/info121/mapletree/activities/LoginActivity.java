@@ -109,8 +109,8 @@ public class LoginActivity extends AbstractActivity {
         //  callCheckVersion();
 
         //TODO: remove predefined password
-//        mUserName.setText("guard1");
-//        mPassword.setText("password1");
+        mUserName.setText("guard1");
+        mPassword.setText("password1");
 
 
         Log.e("Secret Key : " ,  App.secretKey);
