@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
-import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+//import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 
 public class App extends Application {
@@ -31,13 +31,13 @@ public class App extends Application {
     String TAG = "Application";
 
     //LIVE
- //  public static String CONST_REST_API_URL = "https://vivocityservicemgt.vivocity.com.sg/restapimapletree/MyLimoService.svc/";
+    public static String CONST_REST_API_URL = "https://vivocityservicemgt.vivocity.com.sg/restapimapletree/MyLimoService.svc/";
 
    //DEV
  // public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
 
     //DEV
-   public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
+//   public static String CONST_REST_API_URL = "http://info121.sytes.net/restapimapletree/MyLimoService.svc/";
 
 
 //    public static String CONST_PDF_URL = "http://alexisinfo121.noip.me:83/IOPSComfortDelgro/uploads/";
@@ -113,10 +113,10 @@ public class App extends Application {
         super.onCreate();
 
 
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Lato-Regular.ttf")
-                       // .setFontAttrId(R.attr.fontPath)
-                        .build());
+//        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+//                        .setDefaultFontPath("fonts/Lato-Regular.ttf")
+//                       // .setFontAttrId(R.attr.fontPath)
+//                        .build());
 
 
         FirebaseInstanceId.getInstance().getInstanceId()

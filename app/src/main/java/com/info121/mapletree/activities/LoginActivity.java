@@ -110,7 +110,7 @@ public class LoginActivity extends AbstractActivity {
 
         //TODO: remove predefined password
         mUserName.setText("guard1");
-        mPassword.setText("password1");
+        mPassword.setText("mapletree");
 
 
         Log.e("Secret Key : " ,  App.secretKey);
