@@ -5,18 +5,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.appcompat.app.AlertDialog;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.info121.mapletree.AbstractActivity;
 import com.info121.mapletree.App;
@@ -27,6 +28,8 @@ import com.info121.mapletree.services.SmartLocationService;
 import com.info121.mapletree.utils.PrefDB;
 import com.info121.mapletree.utils.Util;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -69,6 +72,13 @@ public class LoginActivity extends AbstractActivity {
 
 
     @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        SendLogcatMail();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
@@ -106,12 +116,23 @@ public class LoginActivity extends AbstractActivity {
             ActivityCompat.finishAffinity(LoginActivity.this);
         }
         //TODO: unComment When Release
-        //  callCheckVersion();
+          callCheckVersion();
 
         //TODO: remove predefined password
-        mUserName.setText("guard1");
-        mPassword.setText("mapletree");
+//        mUserName.setText("guard1");
+//        mPassword.setText("mapletree");
 
+//        Button crashButton = new Button(this);
+//        crashButton.setText("Test Crash");
+//        crashButton.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View view) {
+//                throw new RuntimeException("Test Crash"); // Force a crash
+//            }
+//        });
+//
+//        addContentView(crashButton, new ViewGroup.LayoutParams(
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT));
 
         Log.e("Secret Key : " ,  App.secretKey);
         Log.e("Mobile Key : ", Util.convertToSpecial(mContext));
@@ -336,5 +357,31 @@ public class LoginActivity extends AbstractActivity {
         dialog.show();
     }
 
+
+    public void SendLogcatMail(){
+
+        // save logcat in file
+        File outputFile = new File(Environment.getExternalStorageDirectory(),
+                "logcat.txt");
+        try {
+            Runtime.getRuntime().exec(
+                    "logcat -f " + outputFile.getAbsolutePath());
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        //send file using email
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        // Set type to "email"
+        emailIntent.setType("vnd.android.cursor.dir/email");
+        String to[] = {"mylimo121@gmail.com"};
+        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+        // the attachment
+        emailIntent .putExtra(Intent.EXTRA_STREAM, outputFile.getAbsolutePath());
+        // the mail subject
+        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        startActivity(Intent.createChooser(emailIntent , "Send email..."));
+    }
 
 }

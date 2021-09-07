@@ -1,16 +1,14 @@
 package com.info121.mapletree.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.annotation.BinderThread;
-import android.support.annotation.NonNull;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
-import android.util.DisplayMetrics;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SwitchCompat;
+
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +19,10 @@ import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import com.info121.mapletree.R;
-import com.info121.mapletree.activities.LevelsActivity;
-import com.info121.mapletree.models.RoundsDetails;
 import com.info121.mapletree.models.UnitDetail;
-import com.info121.mapletree.utils.Util;
 
 import java.util.ArrayList;
 import java.util.List;

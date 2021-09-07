@@ -8,11 +8,10 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.info121.mapletree.App;

@@ -8,19 +8,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.util.Log;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+//import com.google.firebase.iid.FirebaseInstanceId;
+//import com.google.firebase.iid.InstanceIdResult;
 import com.info121.mapletree.utils.PrefDB;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.TimeZone;
 
 //import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -119,22 +113,22 @@ public class App extends Application {
 //                        .build());
 
 
-        FirebaseInstanceId.getInstance().getInstanceId()
-                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
-                        if (!task.isSuccessful()) {
-                            Log.e(TAG, "getInstanceId failed", task.getException());
-                            return;
-                        }
-
-                        // Get new Instance ID token
-                        FCM_TOKEN = task.getResult().getToken();
-
-                    }
-                });
-
-        Log.e("TOKEN : " , FCM_TOKEN);
+//        FirebaseInstanceId.getInstance().getInstanceId()
+//                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+//                        if (!task.isSuccessful()) {
+//                            Log.e(TAG, "getInstanceId failed", task.getException());
+//                            return;
+//                        }
+//
+//                        // Get new Instance ID token
+//                        FCM_TOKEN = task.getResult().getToken();
+//
+//                    }
+//                });
+//
+//        Log.e("TOKEN : " , FCM_TOKEN);
 
 //        File f = new File(Environment.getExternalStorageDirectory(), PHOTO_FOLDER);
 //
